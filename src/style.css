@@ -458,6 +458,10 @@ body {
   padding: 32px;
 }
 
+#page-container {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
 /* ───── Pages ───── */
 .page {
   display: none;

@@ -5,11 +5,27 @@ const toggleBtn = document.getElementById('sidebar-toggle')
 const mobileToggle = document.getElementById('mobile-toggle')
 const overlay = document.getElementById('sidebar-overlay')
 const navItems = document.querySelectorAll('.nav-item')
-const pages = document.querySelectorAll('.page')
 const pageTitle = document.getElementById('page-title')
+const pageContainer = document.getElementById('page-container')
 
 const STORAGE_KEY = 'autoparts_sidebar'
 const THEME_KEY = 'autotrack_theme'
+
+const pageCache = {}
+
+const titles = {
+  home: 'Home',
+  search: 'Search',
+  browse: 'Browse',
+  inventory: 'Inventory',
+  vehicle: 'Vehicle',
+  billing: 'Billing',
+  reports: 'Reports',
+  notification: 'Notification',
+  members: 'Members',
+  history: 'History',
+  account: 'Account',
+}
 
 /* ───── Sidebar Collapse ───── */
 function setCollapsed(collapsed) {
@@ -45,31 +61,26 @@ mobileToggle.addEventListener('click', openMobile)
 overlay.addEventListener('click', closeMobile)
 
 /* ───── Navigation / Hash Routing ───── */
-function navigateTo(pageId) {
+async function navigateTo(pageId) {
   const target = pageId || 'home'
 
   navItems.forEach(item => {
     item.classList.toggle('active', item.dataset.page === target)
   })
 
-  pages.forEach(page => {
-    page.classList.toggle('active', page.id === `page-${target}`)
-  })
-
-  const titles = {
-    home: 'Home',
-    search: 'Search',
-    browse: 'Browse',
-    inventory: 'Inventory',
-    vehicle: 'Vehicle',
-    billing: 'Billing',
-    reports: 'Reports',
-    notification: 'Notification',
-    members: 'Members',
-    history: 'History',
-    account: 'Account',
-  }
   pageTitle.textContent = titles[target] || 'Home'
+
+  if (!pageCache[target]) {
+    try {
+      const res = await fetch(`/src/pages/${target}.html`)
+      if (!res.ok) throw new Error(`Page not found: ${target}`)
+      pageCache[target] = await res.text()
+    } catch (err) {
+      pageCache[target] = `<template data-title="Error"><div class="page-placeholder"><i class="fas fa-exclamation-triangle"></i><h2>Page Not Found</h2><p>${err.message}</p></div></template>`
+    }
+  }
+
+  pageContainer.innerHTML = pageCache[target]
 
   if (window.innerWidth <= 768) {
     closeMobile()
@@ -131,15 +142,3 @@ function loadTheme() {
 
 themeToggle.addEventListener('click', toggleTheme)
 loadTheme()
-
-/* ───── Header Date ───── */
-const dateEl = document.getElementById('header-date')
-if (dateEl) {
-  const now = new Date()
-  dateEl.textContent = now.toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}

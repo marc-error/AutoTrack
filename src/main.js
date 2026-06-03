@@ -61,6 +61,8 @@ mobileToggle.addEventListener('click', openMobile)
 overlay.addEventListener('click', closeMobile)
 
 /* ───── Navigation / Hash Routing ───── */
+let isTransitioning = false
+
 async function navigateTo(pageId) {
   const target = pageId || 'home'
 
@@ -76,11 +78,24 @@ async function navigateTo(pageId) {
       if (!res.ok) throw new Error(`Page not found: ${target}`)
       pageCache[target] = await res.text()
     } catch (err) {
-      pageCache[target] = `<template data-title="Error"><div class="page-placeholder"><i class="fas fa-exclamation-triangle"></i><h2>Page Not Found</h2><p>${err.message}</p></div></template>`
+      pageCache[target] = `<div class="page-placeholder"><i class="fas fa-exclamation-triangle"></i><h2>Page Not Found</h2><p>${err.message}</p></div>`
     }
   }
 
-  pageContainer.innerHTML = pageCache[target]
+  if (isTransitioning) return
+  isTransitioning = true
+
+  pageContainer.style.opacity = '0'
+  pageContainer.style.transform = 'translateY(8px)'
+
+  setTimeout(() => {
+    pageContainer.innerHTML = pageCache[target]
+    requestAnimationFrame(() => {
+      pageContainer.style.opacity = '1'
+      pageContainer.style.transform = 'translateY(0)'
+      isTransitioning = false
+    })
+  }, 150)
 
   if (window.innerWidth <= 768) {
     closeMobile()

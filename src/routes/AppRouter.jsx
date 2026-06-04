@@ -11,6 +11,7 @@ import NotificationPage from '../pages/NotificationPage'
 import MembersPage from '../pages/MembersPage'
 import HistoryPage from '../pages/HistoryPage'
 import AccountPage from '../pages/AccountPage'
+import ProtectedRoute from '../utils/protectedRoute'
 
 const router = createBrowserRouter([
   {
@@ -21,13 +22,62 @@ const router = createBrowserRouter([
       { path: 'home', element: <HomePage /> },
       { path: 'search', element: <SearchPage /> },
       { path: 'browse', element: <BrowsePage /> },
-      { path: 'inventory', element: <InventoryPage /> },
-      { path: 'vehicle', element: <VehiclePage /> },
-      { path: 'billing', element: <BillingPage /> },
-      { path: 'reports', element: <ReportsPage /> },
-      { path: 'notification', element: <NotificationPage /> },
-      { path: 'members', element: <MembersPage /> },
-      { path: 'history', element: <HistoryPage /> },
+      {
+        path: 'inventory',
+        element: (
+          <ProtectedRoute>
+            <InventoryPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'vehicle',
+        element: (
+          <ProtectedRoute>
+            <VehiclePage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'billing',
+        element: (
+          <ProtectedRoute>
+            <BillingPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'reports',
+        element: (
+          <ProtectedRoute requiredRole="manager">
+            <ReportsPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'notification',
+        element: (
+          <ProtectedRoute>
+            <NotificationPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'members',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <MembersPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'history',
+        element: (
+          <ProtectedRoute>
+            <HistoryPage />
+          </ProtectedRoute>
+        )
+      },
       { path: 'account', element: <AccountPage /> },
     ],
   },

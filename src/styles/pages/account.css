@@ -5,6 +5,7 @@
 }
 
 .account-header {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -61,6 +62,138 @@
   border-radius: 20px;
 }
 
+.account-login-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--header-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.account-login-alert svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.account-login-alert p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.account-login-alert strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.account-section {
+  background: var(--header-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.account-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.account-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.account-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.account-detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.detail-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.account-status-active {
+  color: #22c55e;
+}
+
+.account-header-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.account-switch-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--sidebar-hover);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: inherit;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.account-switch-btn:hover {
+  background: var(--accent-light);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.account-logout-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--sidebar-hover);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.account-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.account-logout-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
 @media (max-width: 768px) {
   .account-header {
     flex-direction: column;
@@ -72,5 +205,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .account-header-actions {
+    position: static;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .account-detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
   }
 }

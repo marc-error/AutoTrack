@@ -165,7 +165,8 @@ body {
   margin-bottom: 0;
 }
 
-.profile-card .profile-item {
+.profile-card .profile-item,
+.profile-card .login-btn {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -176,6 +177,18 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
+.profile-card .login-btn {
+  width: calc(100% - 8px);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.profile-card .login-btn:hover {
+  background: var(--sidebar-hover);
+}
+
 .profile-avatar {
   width: 28px;
   height: 28px;
@@ -183,12 +196,22 @@ body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: var(--sidebar-text-active);
+  color: var(--sidebar-text);
+  transition: color 0.3s ease;
 }
 
 .profile-avatar svg {
   width: 28px;
   height: 28px;
+}
+
+.nav-item:hover .profile-avatar,
+.login-btn:hover .profile-avatar {
+  color: var(--sidebar-text-active);
+}
+
+.nav-item.active .profile-avatar {
+  color: var(--sidebar-text-active);
 }
 
 .profile-info {
@@ -214,6 +237,11 @@ body {
 .collapsed .profile-card .profile-info {
   opacity: 0;
   pointer-events: none;
+}
+
+.profile-role {
+  font-size: 0.65rem;
+  color: var(--accent);
 }
 
 /* ───── Theme Toggle Button ───── */
@@ -659,6 +687,29 @@ body {
 
   .sidebar.open {
     left: 0;
+  }
+
+  .sidebar.open .nav-item span,
+  .sidebar.open .logo-full,
+  .sidebar.open .logo-short,
+  .sidebar.open .profile-info {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar.open .logo-full {
+    width: auto;
+    overflow: visible;
+    position: static;
+  }
+
+  .sidebar.open .logo-short {
+    display: none;
+  }
+
+  .sidebar.open .theme-toggle-label {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .sidebar.collapsed {

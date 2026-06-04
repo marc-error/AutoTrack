@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { AuthProvider } from '../context/AuthContext'
 import Sidebar from './Sidebar'
 
 const STORAGE_KEY = 'autoparts_sidebar'
@@ -35,15 +36,15 @@ export default function Layout() {
   }, [location])
 
   const toggleCollapse = () => setCollapsed(prev => !prev)
-  const openMobile = () => setMobileOpen(true)
-  const closeMobile = () => setMobileOpen(false)
+  const toggleMobile = () => setMobileOpen(prev => !prev)
+  const closeMobile = useCallback(() => setMobileOpen(false), [])
 
   return (
-    <>
+    <AuthProvider>
       <Sidebar collapsed={collapsed} onToggleCollapse={toggleCollapse} mobileOpen={mobileOpen} onCloseMobile={closeMobile} />
       <main className={`main-content${collapsed ? ' collapsed-parent' : ''}`}>
         <header className="content-header">
-          <button className="mobile-toggle" title="Toggle menu" onClick={openMobile}>
+          <button className="mobile-toggle" title="Toggle menu" onClick={toggleMobile}>
             <i className="fas fa-bars"></i>
           </button>
           <h1>{pageTitle}</h1>
@@ -55,6 +56,6 @@ export default function Layout() {
           </div>
         </div>
       </main>
-    </>
+    </AuthProvider>
   )
 }

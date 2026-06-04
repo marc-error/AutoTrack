@@ -183,6 +183,8 @@ body {
   border: none;
   cursor: pointer;
   text-align: left;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 .profile-card .login-btn:hover {
@@ -260,6 +262,8 @@ body {
   border-radius: 10px;
   width: calc(100% - 8px);
   text-align: left;
+  font-family: inherit;
+  font-size: inherit;
   transition: background 0.2s ease, color 0.2s ease;
 }
 

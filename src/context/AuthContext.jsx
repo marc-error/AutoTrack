@@ -21,9 +21,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChange(async (firebaseUser) => {
-      setUser(firebaseUser)
-      setLoading(false)
-
       if (firebaseUser) {
         console.log('Auth UID:', firebaseUser.uid)
         const { data, error } = await getStaffProfile(firebaseUser.uid)
@@ -49,6 +46,9 @@ export const AuthProvider = ({ children }) => {
       } else {
         setStaffProfile(null)
       }
+
+      setUser(firebaseUser)
+      setLoading(false)
     })
 
     return () => unsubscribe()

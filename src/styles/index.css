@@ -1,0 +1,12 @@
+@import './global.css';
+@import './pages/home.css';
+@import './pages/search.css';
+@import './pages/browse.css';
+@import './pages/inventory.css';
+@import './pages/vehicle.css';
+@import './pages/billing.css';
+@import './pages/reports.css';
+@import './pages/notification.css';
+@import './pages/members.css';
+@import './pages/history.css';
+@import './pages/account.css';

@@ -434,7 +434,8 @@ body {
   transition: margin-left var(--transition);
 }
 
-.collapsed + .main-content {
+.collapsed + .main-content,
+.collapsed-parent {
   margin-left: var(--sidebar-collapsed);
 }
 

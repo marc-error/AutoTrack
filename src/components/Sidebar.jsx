@@ -99,6 +99,20 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                     </svg>
                     <span>Billing</span>
                   </NavLink>
+                  <NavLink to="/notification" className={navClass}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                      <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                    </svg>
+                    <span>Notification</span>
+                  </NavLink>
+                  <NavLink to="/history" className={navClass}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 6v6l4 2"/>
+                    </svg>
+                    <span>History</span>
+                  </NavLink>
                   {hasMinRole('manager') && (
                     <NavLink to="/reports" className={navClass}>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -107,13 +121,6 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                       <span>Reports</span>
                     </NavLink>
                   )}
-                  <NavLink to="/notification" className={navClass}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                      <path d="M13.73 21a2 2 0 01-3.46 0"/>
-                    </svg>
-                    <span>Notification</span>
-                  </NavLink>
                   {hasMinRole('admin') && (
                     <NavLink to="/members" className={navClass}>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -125,13 +132,6 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                       <span>Members</span>
                     </NavLink>
                   )}
-                  <NavLink to="/history" className={navClass}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10"/>
-                      <path d="M12 6v6l4 2"/>
-                    </svg>
-                    <span>History</span>
-                  </NavLink>
                 </>
               )}
             </div>

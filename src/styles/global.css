@@ -106,36 +106,37 @@ body {
 }
 
 .logo-full {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--sidebar-text-active);
-  transition: opacity 0.3s ease;
 }
 
-.logo-short {
-  display: none;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--sidebar-text-active);
-  text-align: center;
-  width: 100%;
-  transition: opacity 0.3s ease;
+.logo-a {
+  flex-shrink: 0;
+}
+
+.logo-rest {
+  overflow: hidden;
+  max-width: 200px;
+  opacity: 1;
+  transition: max-width 0.3s ease, opacity 0.3s ease;
+  white-space: nowrap;
 }
 
 .collapsed .logo-full {
+  justify-content: center;
+}
+
+.collapsed .logo-rest {
+  max-width: 0;
   opacity: 0;
-  width: 0;
-  overflow: hidden;
-  position: absolute;
 }
 
 .collapsed .logo-icon {
   display: none;
-}
-
-.collapsed .logo-short {
-  display: block;
-  padding: 2px;
 }
 
 /* ───── Static Top Group (non-scrollable) ───── */
@@ -694,21 +695,19 @@ body {
   }
 
   .sidebar.open .nav-item span,
-  .sidebar.open .logo-full,
-  .sidebar.open .logo-short,
   .sidebar.open .profile-info {
     opacity: 1;
     pointer-events: auto;
   }
 
   .sidebar.open .logo-full {
-    width: auto;
-    overflow: visible;
-    position: static;
+    opacity: 1;
+    pointer-events: auto;
   }
 
-  .sidebar.open .logo-short {
-    display: none;
+  .sidebar.open .logo-rest {
+    max-width: 200px;
+    opacity: 1;
   }
 
   .sidebar.open .theme-toggle-label {

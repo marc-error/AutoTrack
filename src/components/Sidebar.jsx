@@ -40,8 +40,10 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
       <aside className={`sidebar${collapsed ? ' collapsed' : ''}${mobileOpen ? ' open' : ''}`}>
         <div className="sidebar-header">
           <div className="sidebar-logo">
-            <span className="logo-full">AUTOTRACK</span>
-            <span className="logo-short">A</span>
+            <span className="logo-full">
+              <span className="logo-a">A</span>
+              <span className="logo-rest">UTOTRACK</span>
+            </span>
           </div>
         </div>
 

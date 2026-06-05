@@ -84,59 +84,65 @@ body {
 
 /* ───── Sidebar Header ───── */
 .sidebar-header {
-  padding: 20px 16px 16px;
+  padding: 12px 12px 0;
+  flex-shrink: 0;
+}
+
+.logo-card {
   flex-shrink: 0;
 }
 
 .sidebar-logo {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 12px;
+  margin: 0 4px;
+  padding: 8px 12px 8px 13px;
+  min-height: 36px;
+  border-radius: 10px;
   white-space: nowrap;
-  width: 100%;
-  position: relative;
-  gap: 8px;
 }
 
 .logo-icon {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   flex-shrink: 0;
-  color: var(--accent);
+  color: #f97316;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon svg {
+  width: 26px;
+  height: 26px;
 }
 
 .logo-full {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--sidebar-text-active);
-}
-
-.logo-a {
-  flex-shrink: 0;
+  letter-spacing: -0.5px;
 }
 
 .logo-rest {
   overflow: hidden;
   max-width: 200px;
   opacity: 1;
-  transition: max-width 0.3s ease, opacity 0.3s ease;
+  transition: opacity 0.25s ease;
   white-space: nowrap;
 }
 
-.collapsed .logo-full {
-  justify-content: center;
-}
-
 .collapsed .logo-rest {
-  max-width: 0;
   opacity: 0;
+  pointer-events: none;
 }
 
-.collapsed .logo-icon {
-  display: none;
+.collapsed .logo-full {
+  gap: 0;
 }
 
 /* ───── Static Top Group (non-scrollable) ───── */
@@ -310,6 +316,54 @@ body {
   padding: 8px 12px;
 }
 
+/* ───── Collapse Toggle Button ───── */
+.collapse-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 4px;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: var(--sidebar-text);
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 36px;
+  border-radius: 10px;
+  width: calc(100% - 8px);
+  text-align: left;
+  font-family: inherit;
+  font-size: inherit;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.collapse-toggle:hover {
+  background: var(--sidebar-hover);
+  color: var(--sidebar-text-active);
+}
+
+.collapse-toggle svg {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  transition: transform 0.3s ease;
+}
+
+.collapsed .collapse-toggle svg {
+  transform: rotate(180deg);
+}
+
+.collapse-toggle-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: opacity 0.25s ease;
+}
+
+.collapsed .collapse-toggle-label {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ───── Card Groups ───── */
 .sidebar-card-group {
   display: flex;
@@ -417,44 +471,6 @@ body {
 
 .nav-item.active span {
   color: var(--sidebar-text-active);
-}
-
-/* ───── Sidebar Toggle ───── */
-.sidebar-toggle {
-  position: fixed;
-  left: var(--sidebar-width);
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 101;
-  background: transparent;
-  border: none;
-  color: var(--sidebar-text);
-  width: 22px;
-  height: 56px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  transition: left var(--transition), background 0.2s ease, color 0.2s ease;
-  font-size: 0.75rem;
-}
-
-.sidebar-toggle:hover {
-  background: transparent;
-  color: var(--sidebar-text-active);
-}
-
-.sidebar-toggle i {
-  transition: transform 0.35s ease-in-out;
-}
-
-.sidebar.collapsed .sidebar-toggle {
-  left: var(--sidebar-collapsed);
-}
-
-.sidebar.collapsed .sidebar-toggle i {
-  transform: rotate(180deg);
 }
 
 /* ───── Main Content ───── */
@@ -700,17 +716,12 @@ body {
     pointer-events: auto;
   }
 
-  .sidebar.open .logo-full {
+  .sidebar.open .theme-toggle-label {
     opacity: 1;
     pointer-events: auto;
   }
 
-  .sidebar.open .logo-rest {
-    max-width: 200px;
-    opacity: 1;
-  }
-
-  .sidebar.open .theme-toggle-label {
+  .sidebar.open .collapse-toggle-label {
     opacity: 1;
     pointer-events: auto;
   }
@@ -775,11 +786,5 @@ body {
 
   .btn-edit {
     align-self: flex-start;
-  }
-}
-
-@media (min-width: 769px) {
-  .sidebar-toggle {
-    display: flex;
   }
 }

@@ -39,11 +39,15 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
     <>
       <aside className={`sidebar${collapsed ? ' collapsed' : ''}${mobileOpen ? ' open' : ''}`}>
         <div className="sidebar-header">
-          <div className="sidebar-logo">
-            <span className="logo-full">
-              <span className="logo-a">A</span>
-              <span className="logo-rest">UTOTRACK</span>
-            </span>
+          <div className="sidebar-card-group logo-card">
+            <div className="sidebar-logo">
+              <svg className="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 17h14M5 17a2 2 0 01-2-2V9a2 2 0 012-2h1l2-3h8l2 3h1a2 2 0 012 2v6a2 2 0 01-2 2M5 17a2 2 0 100 4 2 2 0 000-4zM19 17a2 2 0 100 4 2 2 0 000-4z"/>
+              </svg>
+              <span className="logo-full">
+                <span className="logo-rest">AUTOTRACK</span>
+              </span>
+            </div>
           </div>
         </div>
 
@@ -138,6 +142,18 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
               )}
             </div>
             <div className="menu-card-bottom">
+              <button className="collapse-toggle" title="Collapse sidebar" onClick={() => {
+                if (window.innerWidth <= 768) {
+                  onCloseMobile()
+                } else {
+                  onToggleCollapse()
+                }
+              }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 18l-6-6 6-6"/>
+                </svg>
+                <span className="collapse-toggle-label">Collapse</span>
+              </button>
               <button className="theme-toggle" title="Toggle theme" onClick={toggleTheme}>
                 <svg className="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="4"/>
@@ -180,9 +196,6 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
           </div>
         </nav>
 
-        <button className="sidebar-toggle" title="Collapse sidebar" onClick={onToggleCollapse}>
-          <i className="fas fa-chevron-left"></i>
-        </button>
       </aside>
 
       {mobileOpen && <div className="sidebar-overlay show" onClick={onCloseMobile}></div>}

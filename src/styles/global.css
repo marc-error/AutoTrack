@@ -726,6 +726,15 @@ body {
     pointer-events: auto;
   }
 
+  .sidebar.open .logo-rest {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar.open .collapse-toggle svg {
+    transform: rotate(0deg);
+  }
+
   .sidebar.collapsed {
     width: var(--sidebar-width);
   }

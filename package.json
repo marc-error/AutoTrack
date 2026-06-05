@@ -1,10 +1,12 @@
 {
-  "name": "test",
+  "name": "autotrack-system",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:backend\"",
     "build": "vite build",
     "preview": "vite preview"
   },

@@ -3,8 +3,10 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // Helper function to get the requesting user's role
+    // Returns null if staff doc doesn't exist (prevents lockouts)
     function getUserRole() {
-      return get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role;
+      let doc = get(/databases/$(database)/documents/staff/$(request.auth.uid));
+      return doc.exists ? doc.data.role : null;
     }
 
     // === STAFF COLLECTION ===
@@ -53,6 +55,11 @@ service cloud.firestore {
       // Delete: Admins only
       allow delete: if request.auth != null
         && getUserRole() == 'admin';
+    }
+
+    // === DENY ALL OTHER COLLECTIONS ===
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

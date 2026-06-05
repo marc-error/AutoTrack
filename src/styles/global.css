@@ -107,15 +107,20 @@ body {
   width: 26px;
   height: 26px;
   flex-shrink: 0;
-  color: #f97316;
+  color: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+[data-theme="dark"] .logo-icon {
+  color: #ffffff;
+}
+
 .logo-icon svg {
   width: 26px;
   height: 26px;
+  fill: currentColor;
 }
 
 .logo-full {

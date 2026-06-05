@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
-import LoginModal from './LoginModal'
+import LoginModal from '../components/LoginModal'
 import { ROLE_LABELS } from '../utils/roles'
 
 const THEME_KEY = 'autotrack_theme'

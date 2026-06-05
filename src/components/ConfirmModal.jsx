@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import './ConfirmModal.css'
 
 export default function ConfirmModal({ isOpen, onClose, onConfirm, title, message, confirmText = 'Confirm', cancelText = 'Cancel', danger = false }) {
   const [isClosing, setIsClosing] = useState(false)

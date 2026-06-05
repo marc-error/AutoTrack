@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import Layout from '../components/Layout'
+import AppLayout from '../layouts/AppLayout'
 import HomePage from '../pages/HomePage'
 import SearchPage from '../pages/SearchPage'
 import BrowsePage from '../pages/BrowsePage'
@@ -16,7 +16,7 @@ import ProtectedRoute from '../utils/protectedRoute'
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: <AppLayout />,
     children: [
       { index: true, element: <Navigate to="/home" replace /> },
       { path: 'home', element: <HomePage /> },

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
-import './LoginModal.css'
 
 const REMEMBER_KEY = 'autotrack_remember_email'
 

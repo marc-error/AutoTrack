@@ -9,7 +9,7 @@ import {
   where,
   serverTimestamp
 } from 'firebase/firestore'
-import { db } from './config'
+import { db } from '../config/firebase'
 
 export const STAFF_COLLECTION = 'staff'
 

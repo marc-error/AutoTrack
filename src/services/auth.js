@@ -3,7 +3,7 @@ import {
   signOut,
   onAuthStateChanged
 } from 'firebase/auth'
-import { auth } from './config'
+import { auth } from '../config/firebase'
 
 export const loginWithEmail = async (email, password) => {
   if (!auth) {

@@ -19,7 +19,7 @@ const titles = {
   account: 'Account',
 }
 
-export default function Layout() {
+export default function AppLayout() {
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem(STORAGE_KEY) === '1')
   const [mobileOpen, setMobileOpen] = useState(false)

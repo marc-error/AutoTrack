@@ -10,7 +10,7 @@ import {
   limit as firestoreLimit,
   onSnapshot
 } from 'firebase/firestore'
-import { db } from '../firebase/config'
+import { db } from '../config/firebase'
 
 export const useCollection = (collectionName, options = {}) => {
   const [data, setData] = useState([])

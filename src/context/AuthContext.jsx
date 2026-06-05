@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { onAuthStateChange, loginWithEmail, logout as authLogout } from '../firebase/auth'
-import { getStaffProfile, createStaffProfile } from '../firebase/firestore'
+import { onAuthStateChange, loginWithEmail, logout as authLogout } from '../services/auth'
+import { getStaffProfile, createStaffProfile } from '../services/firestore'
 import { ROLES } from '../utils/roles'
 
 const AuthContext = createContext(null)

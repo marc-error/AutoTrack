@@ -123,9 +123,19 @@ export default function MembersPage() {
   if (loading) {
     return (
       <div className="members-page">
-        <div className="members-loading">
-          <div className="login-spinner" style={{ width: 32, height: 32 }}></div>
-          <p>Loading staff members...</p>
+        <div className="members-body">
+          <div className="members-content">
+            <div className="members-loading">
+              <div className="login-spinner" style={{ width: 32, height: 32 }}></div>
+              <p>Loading staff members...</p>
+            </div>
+          </div>
+          <div className="members-form-panel open">
+            <div className="members-loading" style={{ paddingTop: '400px' }}>
+              <div className="login-spinner" style={{ width: 32, height: 32 }}></div>
+              <p>Loading...</p>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -134,15 +144,24 @@ export default function MembersPage() {
   if (error) {
     return (
       <div className="members-page">
-        <div className="members-error">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          <h3>Something went wrong</h3>
-          <p>{error}</p>
-          <button className="members-retry-btn" onClick={fetchStaff}>Retry</button>
+        <div className="members-body">
+          <div className="members-content">
+            <div className="members-error">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <h3>Something went wrong</h3>
+              <p>{error}</p>
+              <button className="members-retry-btn" onClick={fetchStaff}>Retry</button>
+            </div>
+          </div>
+          <div className="members-form-panel open">
+            <div className="members-loading" style={{ paddingTop: '400px' }}>
+              <p>Please retry to continue</p>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -152,14 +171,35 @@ export default function MembersPage() {
     <div className="members-page">
       <div className="members-body">
         <div className="members-content">
-          <div className="members-count">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-              <path d="M16 3.13a4 4 0 010 7.75"/>
-            </svg>
-            <span>{staffList.length} Staff</span>
+          <div className="members-header">
+            <div className="members-count">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                <path d="M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+              <span>{staffList.length} Staff</span>
+            </div>
+            <div className="members-filters">
+              <input
+                type="text"
+                className="form-input members-search"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <select
+                className="form-input form-select members-role-filter"
+                value={roleFilter}
+                onChange={(e) => setRoleFilter(e.target.value)}
+              >
+                <option value="all">Role</option>
+                <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
+                <option value="staff">Staff</option>
+              </select>
+            </div>
           </div>
           <div className="members-table-wrapper">
             <table className="members-table">
@@ -260,25 +300,6 @@ export default function MembersPage() {
         </div>
 
         <div className="members-form-panel open">
-          <div className="members-filters">
-            <input
-              type="text"
-              className="form-input members-search"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <select
-              className="form-input form-select members-role-filter"
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-            >
-              <option value="all">Role</option>
-              <option value="admin">Admin</option>
-              <option value="manager">Manager</option>
-              <option value="staff">Staff</option>
-            </select>
-          </div>
           <StaffFormModal
             isOpen={true}
             onClose={() => setEditingStaff(null)}

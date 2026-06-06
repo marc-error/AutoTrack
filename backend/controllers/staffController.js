@@ -198,3 +198,78 @@ export const deleteStaff = async (req, res, next) => {
     next(err)
   }
 }
+
+export const resetPassword = async (req, res, next) => {
+  try {
+    const existing = await firebaseService.getById(COLLECTIONS.STAFF, req.params.id)
+    if (!existing) {
+      return response.error(res, 'Staff not found', 404)
+    }
+
+    if (!existing.firebaseUid) {
+      return response.error(res, 'Firebase user not found', 404)
+    }
+
+    const tempPassword = generateTempPassword()
+    await adminAuth.updateUser(existing.firebaseUid, {
+      password: tempPassword
+    })
+
+    return response.success(res, { tempPassword })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const updateEmail = async (req, res, next) => {
+  try {
+    const { newEmail } = req.body
+
+    if (!newEmail || !EMAIL_REGEX.test(newEmail)) {
+      return response.error(res, 'Invalid email format', 400)
+    }
+
+    const existing = await firebaseService.getById(COLLECTIONS.STAFF, req.params.id)
+    if (!existing) {
+      return response.error(res, 'Staff not found', 404)
+    }
+
+    if (!existing.firebaseUid) {
+      return response.error(res, 'Firebase user not found', 404)
+    }
+
+    const normalizedEmail = newEmail.toLowerCase().trim()
+
+    // Check if new email already exists
+    try {
+      await adminAuth.getUserByEmail(normalizedEmail)
+      return response.error(res, 'Email already in use', 409)
+    } catch (err) {
+      if (err.code !== 'auth/user-not-found') {
+        throw err
+      }
+    }
+
+    // Update Firebase Auth email
+    await adminAuth.updateUser(existing.firebaseUid, {
+      email: normalizedEmail
+    })
+
+    // Update Firestore document - move to new email ID and update email field
+    const updates = {
+      email: normalizedEmail,
+      updatedAt: FieldValue.serverTimestamp()
+    }
+
+    await firebaseService.update(COLLECTIONS.STAFF, normalizedEmail, updates)
+    
+    // Delete old document if email changed
+    if (req.params.id !== normalizedEmail) {
+      await firebaseService.remove(COLLECTIONS.STAFF, req.params.id)
+    }
+
+    return response.success(res, { ...updates, id: normalizedEmail })
+  } catch (err) {
+    next(err)
+  }
+}

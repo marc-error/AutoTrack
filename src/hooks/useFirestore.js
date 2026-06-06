@@ -12,15 +12,17 @@ import {
 } from 'firebase/firestore'
 import { db } from '../config/firebase'
 
-export const useCollection = (collectionName, options = {}) => {
+export const useCollection = (collectionName, options = {}, retryKey = 0) => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [errorCode, setErrorCode] = useState(null)
 
   useEffect(() => {
     if (!db) {
       setLoading(false)
       setError('Firebase is not configured.')
+      setErrorCode('firebase-not-configured')
       return
     }
 
@@ -51,15 +53,27 @@ export const useCollection = (collectionName, options = {}) => {
       },
       (err) => {
         console.error(`Error fetching ${collectionName}:`, err)
-        setError(`Failed to fetch ${collectionName}.`)
+        const code = err?.code || 'unknown'
+        let msg
+        if (code === 'permission-denied') {
+          msg = 'You do not have permission to view this data. Firestore security rules may not be deployed.'
+        } else if (code === 'unauthenticated') {
+          msg = 'You must be logged in to view this data.'
+        } else if (code === 'unavailable') {
+          msg = 'Firestore is currently unavailable. Check your network connection.'
+        } else {
+          msg = `Failed to load ${collectionName} (${code}). Please try again.`
+        }
+        setError(msg)
+        setErrorCode(code)
         setLoading(false)
       }
     )
 
     return () => unsubscribe()
-  }, [collectionName, JSON.stringify(options)])
+  }, [collectionName, JSON.stringify(options), retryKey])
 
-  return { data, loading, error }
+  return { data, loading, error, errorCode }
 }
 
 export const useDocument = (collectionName, docId) => {

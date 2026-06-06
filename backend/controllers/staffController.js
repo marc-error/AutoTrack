@@ -1,7 +1,9 @@
 import * as firebaseService from '../services/firebaseService.js'
 import * as response from '../utils/response.js'
 import { COLLECTIONS } from '../services/firebaseService.js'
+import { adminAuth } from '../config/firebase.js'
 import { FieldValue } from 'firebase-admin/firestore'
+import crypto from 'crypto'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const URL_REGEX = /^(https?:\/\/)/
@@ -16,6 +18,10 @@ const isValidUrl = (url) => {
   if (url === null || url === undefined) return true
   if (typeof url !== 'string') return false
   return URL_REGEX.test(url)
+}
+
+const generateTempPassword = () => {
+  return 'At' + crypto.randomBytes(8).toString('hex') + '!'
 }
 
 export const listStaff = async (req, res, next) => {
@@ -70,19 +76,39 @@ export const createStaff = async (req, res, next) => {
       return response.error(res, 'photoURL must be a valid URL', 400)
     }
 
-    const docId = email.toLowerCase().trim()
+    const normalizedEmail = email.toLowerCase().trim()
+    const tempPassword = generateTempPassword()
+
+    let authUser
+    try {
+      authUser = await adminAuth.createUser({
+        email: normalizedEmail,
+        displayName: sanitizeString(displayName.trim()),
+        password: tempPassword,
+        emailVerified: false,
+        disabled: false
+      })
+    } catch (authErr) {
+      if (authErr.code === 'auth/email-already-exists') {
+        return response.error(res, 'A user with this email already exists in Firebase Authentication.', 409)
+      }
+      throw authErr
+    }
+
+    const docId = normalizedEmail
     const data = {
-      email: email.toLowerCase().trim(),
+      email: normalizedEmail,
       displayName: sanitizeString(displayName.trim()),
       role: role || 'staff',
       photoURL: photoURL || null,
       isActive: true,
+      firebaseUid: authUser.uid,
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp()
     }
 
     const created = await firebaseService.create(COLLECTIONS.STAFF, docId, data)
-    return response.success(res, created, 201)
+    return response.success(res, { ...created, tempPassword }, 201)
   } catch (err) {
     next(err)
   }
@@ -154,6 +180,16 @@ export const deleteStaff = async (req, res, next) => {
     const existing = await firebaseService.getById(COLLECTIONS.STAFF, req.params.id)
     if (!existing) {
       return response.error(res, 'Staff not found', 404)
+    }
+
+    if (existing.firebaseUid) {
+      try {
+        await adminAuth.deleteUser(existing.firebaseUid)
+      } catch (authErr) {
+        if (authErr.code !== 'auth/user-not-found') {
+          throw authErr
+        }
+      }
     }
 
     await firebaseService.remove(COLLECTIONS.STAFF, req.params.id)

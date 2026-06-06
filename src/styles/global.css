@@ -23,6 +23,7 @@
 
   --accent: #6366f1;
   --accent-light: rgba(99,102,241,0.12);
+  --card-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 [data-theme="light"] {
@@ -44,6 +45,7 @@
 
   --accent: #6366f1;
   --accent-light: rgba(99,102,241,0.08);
+  --card-shadow: 0 2px 4px rgba(0,0,0,0.04);
 }
 
 *,
@@ -81,7 +83,6 @@ body {
   z-index: 100;
   transition: width var(--transition), background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   overflow: hidden;
-  border-right: 1px solid var(--sidebar-border);
 }
 
 .sidebar.collapsed {
@@ -384,6 +385,7 @@ body {
   border-radius: var(--sidebar-card-radius);
   padding: 6px;
   margin-bottom: 12px;
+  box-shadow: var(--card-shadow);
   transition: background 0.3s ease;
 }
 
@@ -414,10 +416,8 @@ body {
 
 .menu-card-bottom {
   flex-shrink: 0;
-  border-top: 1px solid var(--sidebar-border);
   margin-top: 4px;
   padding-top: 4px;
-  transition: border-color 0.3s ease;
 }
 
 .sidebar-card-group:last-child {
@@ -449,7 +449,8 @@ body {
   min-height: 36px;
   border-radius: 10px;
   border-left: none;
-  transition: background 0.3s ease, color 0.3s ease;
+  box-shadow: 0 0 0 transparent;
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nav-item svg {
@@ -473,11 +474,13 @@ body {
 .nav-item:hover {
   background: var(--sidebar-hover);
   color: var(--sidebar-text-active);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .nav-item.active {
   background: var(--sidebar-active);
   color: var(--sidebar-text-active);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .nav-item.active span {
@@ -487,10 +490,10 @@ body {
 /* ───── Main Content ───── */
 .main-content {
   margin-left: var(--sidebar-width);
-  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   transition: margin-left var(--transition);
 }
 
@@ -516,10 +519,17 @@ body {
 /* ───── Content Body ───── */
 .content-body {
   flex: 1;
+  min-height: 0;
   padding: 32px;
+  display: flex;
+  flex-direction: column;
 }
 
 #page-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 

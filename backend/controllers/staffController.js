@@ -4,7 +4,19 @@ import { COLLECTIONS } from '../services/firebaseService.js'
 import { FieldValue } from 'firebase-admin/firestore'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const URL_REGEX = /^(https?:\/\/)/
 const ALLOWED_ROLES = ['admin', 'manager', 'staff']
+
+const sanitizeString = (str) => {
+  if (typeof str !== 'string') return str
+  return str.replace(/<[^>]*>/g, '').trim()
+}
+
+const isValidUrl = (url) => {
+  if (url === null || url === undefined) return true
+  if (typeof url !== 'string') return false
+  return URL_REGEX.test(url)
+}
 
 export const listStaff = async (req, res, next) => {
   try {
@@ -17,6 +29,13 @@ export const listStaff = async (req, res, next) => {
 
 export const getStaff = async (req, res, next) => {
   try {
+    const isSelf = req.user && req.user.uid === req.params.id
+    const isAdmin = req.userRole === 'admin'
+
+    if (!isSelf && !isAdmin) {
+      return response.error(res, 'Insufficient permissions', 403)
+    }
+
     const staff = await firebaseService.getById(COLLECTIONS.STAFF, req.params.id)
     if (!staff) {
       return response.error(res, 'Staff not found', 404)
@@ -47,14 +66,14 @@ export const createStaff = async (req, res, next) => {
       return response.error(res, 'Invalid role', 400)
     }
 
-    if (photoURL !== undefined && photoURL !== null && typeof photoURL !== 'string') {
-      return response.error(res, 'photoURL must be a string', 400)
+    if (!isValidUrl(photoURL)) {
+      return response.error(res, 'photoURL must be a valid URL', 400)
     }
 
     const docId = email.toLowerCase().trim()
     const data = {
       email: email.toLowerCase().trim(),
-      displayName: displayName.trim(),
+      displayName: sanitizeString(displayName.trim()),
       role: role || 'staff',
       photoURL: photoURL || null,
       isActive: true,
@@ -90,7 +109,7 @@ export const updateStaff = async (req, res, next) => {
       if (typeof displayName !== 'string' || displayName.trim().length < 1 || displayName.trim().length > 100) {
         return response.error(res, 'displayName must be 1-100 characters', 400)
       }
-      updates.displayName = displayName.trim()
+      updates.displayName = sanitizeString(displayName.trim())
     }
 
     if (role !== undefined) {
@@ -104,8 +123,8 @@ export const updateStaff = async (req, res, next) => {
     }
 
     if (photoURL !== undefined) {
-      if (photoURL !== null && typeof photoURL !== 'string') {
-        return response.error(res, 'photoURL must be a string', 400)
+      if (!isValidUrl(photoURL)) {
+        return response.error(res, 'photoURL must be a valid URL', 400)
       }
       updates.photoURL = photoURL
     }

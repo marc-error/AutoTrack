@@ -82,7 +82,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
         <nav className="sidebar-nav">
           <div className="sidebar-card-group menu-card">
             <div className="menu-card-items">
-              {isAuthenticated && (
+              {isAuthenticated && staffProfile && (
                 <>
                   <div className="sidebar-label">MENU</div>
                   <NavLink to="/inventory" className={navClass}>

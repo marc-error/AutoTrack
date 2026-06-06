@@ -5,17 +5,32 @@ import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
 import routes from './routes/index.js'
 import { errorHandler, notFound } from './middleware/errorHandler.js'
+import { requestIdMiddleware } from './middleware/requestId.js'
+import logger from './utils/logger.js'
 
 const app = express()
 const PORT = process.env.PORT || 5000
 const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || ['http://localhost:5173', 'http://localhost:5174']
 
-app.use(helmet())
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", 'data:', 'https:'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+      connectSrc: ["'self'", 'https://*.firebaseio.com', 'https://*.googleapis.com']
+    }
+  }
+}))
 
 app.use(cors({
   origin: allowedOrigins,
-  credentials: true
+  credentials: false
 }))
+
+app.use(requestIdMiddleware)
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000,
@@ -35,17 +50,17 @@ app.use(notFound)
 app.use(errorHandler)
 
 const server = app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`)
+  logger.info('Server started', { port: PORT })
 })
 
 const shutdown = (signal) => {
-  console.log(`${signal} received. Shutting down gracefully...`)
+  logger.info('Shutdown initiated', { signal })
   server.close(() => {
-    console.log('Server closed.')
+    logger.info('Server closed')
     process.exit(0)
   })
   setTimeout(() => {
-    console.error('Forced shutdown after timeout.')
+    logger.error('Forced shutdown after timeout')
     process.exit(1)
   }, 10000)
 }

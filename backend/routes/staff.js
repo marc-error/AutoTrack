@@ -4,7 +4,7 @@ import { verifyToken, requireRole } from '../middleware/auth.js'
 
 const router = Router()
 
-router.get('/', verifyToken, staffController.listStaff)
+router.get('/', verifyToken, requireRole('admin'), staffController.listStaff)
 router.get('/:id', verifyToken, staffController.getStaff)
 router.post('/', verifyToken, requireRole('admin'), staffController.createStaff)
 router.put('/:id', verifyToken, requireRole('admin', 'manager'), staffController.updateStaff)

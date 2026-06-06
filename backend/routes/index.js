@@ -3,10 +3,11 @@ import staffRoutes from './staff.js'
 import inventoryRoutes from './inventory.js'
 import vehicleRoutes from './vehicles.js'
 import billingRoutes from './billing.js'
+import { verifyToken, requireRole } from '../middleware/auth.js'
 
 const router = Router()
 
-router.get('/health', (req, res) => {
+router.get('/health', verifyToken, requireRole('admin'), (req, res) => {
   const mem = process.memoryUsage()
   res.json({
     status: 'ok',

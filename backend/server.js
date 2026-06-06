@@ -18,10 +18,11 @@ app.use(cors({
 }))
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 10 * 60 * 1000,
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: (req) => req.ip,
   message: { error: 'Too many requests, please try again later' }
 })
 app.use(limiter)
@@ -33,6 +34,21 @@ app.use('/api', routes)
 app.use(notFound)
 app.use(errorHandler)
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
 })
+
+const shutdown = (signal) => {
+  console.log(`${signal} received. Shutting down gracefully...`)
+  server.close(() => {
+    console.log('Server closed.')
+    process.exit(0)
+  })
+  setTimeout(() => {
+    console.error('Forced shutdown after timeout.')
+    process.exit(1)
+  }, 10000)
+}
+
+process.on('SIGTERM', () => shutdown('SIGTERM'))
+process.on('SIGINT', () => shutdown('SIGINT'))

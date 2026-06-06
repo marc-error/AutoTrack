@@ -7,7 +7,16 @@ import billingRoutes from './billing.js'
 const router = Router()
 
 router.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() })
+  const mem = process.memoryUsage()
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    memory: {
+      rss: `${(mem.rss / 1024 / 1024).toFixed(1)} MB`,
+      heapUsed: `${(mem.heapUsed / 1024 / 1024).toFixed(1)} MB`,
+      heapTotal: `${(mem.heapTotal / 1024 / 1024).toFixed(1)} MB`
+    }
+  })
 })
 
 router.use('/staff', staffRoutes)

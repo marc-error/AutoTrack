@@ -57,7 +57,7 @@ export const useCollection = (collectionName, options = {}) => {
     )
 
     return () => unsubscribe()
-  }, [collectionName])
+  }, [collectionName, JSON.stringify(options)])
 
   return { data, loading, error }
 }

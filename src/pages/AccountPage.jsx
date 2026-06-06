@@ -17,6 +17,10 @@ export default function AccountPage() {
     navigate('/home')
   }
 
+  const initials = staffProfile?.displayName
+    ? staffProfile.displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : '?'
+
   if (loading) {
     return (
       <div className="account-page">
@@ -44,69 +48,70 @@ export default function AccountPage() {
 
   return (
     <div className="account-page">
-      <div className="account-header">
+      <div className="account-header-card">
         <div className="account-avatar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 21v-1a6 6 0 0112 0v1"/>
-          </svg>
+          {(user?.photoURL || staffProfile?.photoURL) ? (
+            <img src={user?.photoURL || staffProfile?.photoURL} alt={staffProfile?.displayName} />
+          ) : (
+            <span className="account-avatar-initials">{initials}</span>
+          )}
         </div>
+
         <div className="account-header-info">
-          <h2>{staffProfile?.displayName}</h2>
-          <p>{staffProfile?.email || user?.email}</p>
-          <span className="account-role">{ROLE_LABELS[staffProfile?.role] || staffProfile?.role}</span>
+          <div className="account-name-row">
+            <h2>{staffProfile?.displayName}</h2>
+            <span className={`account-role-badge role-${staffProfile?.role}`}>
+              {ROLE_LABELS[staffProfile?.role] || staffProfile?.role}
+            </span>
+          </div>
+          <div className="account-meta">
+            <span>{ROLE_LABELS[staffProfile?.role]}</span>
+            <span className="meta-sep">&middot;</span>
+            <span>{user?.email}</span>
+          </div>
+          <div className="account-status">
+            <span className={`status-dot ${staffProfile?.isActive !== false ? 'active' : 'inactive'}`}></span>
+            <span>{staffProfile?.isActive !== false ? 'Active' : 'Inactive'}</span>
+          </div>
         </div>
-        <div className="account-header-actions">
-          <button className="account-switch-btn" onClick={() => setLoginModalOpen(true)}>
-            Switch Account
+
+        <div className="account-contact-chips">
+          {user?.email && (
+            <div className="contact-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="M22 4l-10 8L2 4"/>
+              </svg>
+              <span>{user.email}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="account-actions">
+          <button className="account-action-btn" title="Edit Profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            <span>Edit</span>
           </button>
-          <button className="account-logout-btn" onClick={() => setLogoutConfirmOpen(true)} title="Sign Out">
+          <button className="account-action-btn" onClick={() => setLoginModalOpen(true)} title="Switch Account">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 1l4 4-4 4"/>
+              <path d="M3 11V9a4 4 0 014-4h14"/>
+              <path d="M7 23l-4-4 4-4"/>
+              <path d="M21 13v2a4 4 0 01-4 4H3"/>
+            </svg>
+            <span>Switch Account</span>
+          </button>
+          <button className="account-action-btn action-danger" onClick={() => setLogoutConfirmOpen(true)} title="Sign Out">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
               <polyline points="16 17 21 12 16 7"/>
               <line x1="21" y1="12" x2="9" y2="12"/>
             </svg>
+            <span>Sign Out</span>
           </button>
-        </div>
-      </div>
-
-      <div className="account-section">
-        <h3>Account Details</h3>
-        <div className="account-details">
-          <div className="account-detail-row">
-            <span className="detail-label">Display Name</span>
-            <span className="detail-value">{staffProfile?.displayName}</span>
-          </div>
-          <div className="account-detail-row">
-            <span className="detail-label">Email</span>
-            <span className="detail-value">{staffProfile?.email || user?.email}</span>
-          </div>
-          <div className="account-detail-row">
-            <span className="detail-label">Role</span>
-            <span className="detail-value">{ROLE_LABELS[staffProfile?.role]} ({staffProfile?.role})</span>
-          </div>
-          <div className="account-detail-row">
-            <span className="detail-label">Status</span>
-            <span className="detail-value account-status-active">Active</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="account-section">
-        <h3>Debug Info</h3>
-        <div className="account-details">
-          <div className="account-detail-row">
-            <span className="detail-label">Auth UID</span>
-            <span className="detail-value" style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{user?.uid}</span>
-          </div>
-          <div className="account-detail-row">
-            <span className="detail-label">Profile Doc ID</span>
-            <span className="detail-value" style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{staffProfile?.id}</span>
-          </div>
-          <div className="account-detail-row">
-            <span className="detail-label">Role Value</span>
-            <span className="detail-value" style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{staffProfile?.role}</span>
-          </div>
         </div>
       </div>
 

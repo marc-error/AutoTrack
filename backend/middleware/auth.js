@@ -1,4 +1,4 @@
-import { adminAuth } from '../config/firebase.js'
+import { adminAuth, db } from '../config/firebase.js'
 
 export const verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization
@@ -25,8 +25,6 @@ export const requireRole = (...roles) => {
     }
 
     try {
-      const { getFirestore } = await import('firebase-admin/firestore')
-      const db = getFirestore()
       const userDoc = await db.collection('staff').doc(req.user.uid).get()
 
       if (!userDoc.exists) {

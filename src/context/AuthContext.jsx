@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { onAuthStateChange, loginWithEmail, logout as authLogout } from '../services/auth'
-import { getStaffProfile, createStaffProfile } from '../services/firestore'
-import { ROLES } from '../utils/roles'
+import { getStaffProfile, updateStaffProfile } from '../services/firestore'
 
 const AuthContext = createContext(null)
 
@@ -22,26 +21,12 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChange(async (firebaseUser) => {
       if (firebaseUser) {
-        console.log('Auth UID:', firebaseUser.uid)
         const { data, error } = await getStaffProfile(firebaseUser.uid)
-        console.log('Staff profile:', data, 'Error:', error)
 
         if (data) {
           setStaffProfile(data)
-        } else if (error === 'Staff profile not found.') {
-          console.warn('No staff profile found for UID:', firebaseUser.uid, '- auto-creating with staff role')
-          const newProfile = {
-            email: firebaseUser.email,
-            displayName: firebaseUser.displayName || firebaseUser.email.split('@')[0],
-            role: ROLES.STAFF,
-            photoURL: firebaseUser.photoURL
-          }
-          const { error: createError } = await createStaffProfile(firebaseUser.uid, newProfile)
-          if (!createError) {
-            setStaffProfile({ id: firebaseUser.uid, ...newProfile, isActive: true })
-          }
         } else {
-          console.error('Failed to fetch staff profile:', error)
+          setStaffProfile(null)
         }
       } else {
         setStaffProfile(null)
@@ -74,15 +59,19 @@ export const AuthProvider = ({ children }) => {
     return result
   }
 
-  const hasRole = (role) => {
-    if (!staffProfile) return false
-    return staffProfile.role === role
-  }
-
   const hasMinRole = (requiredRole) => {
     if (!staffProfile) return false
     const hierarchy = { admin: 3, manager: 2, staff: 1 }
     return (hierarchy[staffProfile.role] || 0) >= (hierarchy[requiredRole] || 0)
+  }
+
+  const updateProfile = async (updates) => {
+    if (!user) return { error: 'Not authenticated' }
+    const { error } = await updateStaffProfile(user.uid, updates)
+    if (!error) {
+      setStaffProfile(prev => ({ ...prev, ...updates }))
+    }
+    return { error }
   }
 
   const value = {
@@ -93,8 +82,8 @@ export const AuthProvider = ({ children }) => {
     authError,
     login,
     logout,
-    hasRole,
     hasMinRole,
+    updateProfile,
     clearError: () => setAuthError(null)
   }
 

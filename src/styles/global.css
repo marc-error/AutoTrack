@@ -23,6 +23,7 @@
 
   --accent: #6366f1;
   --accent-light: rgba(99,102,241,0.12);
+  --card-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 [data-theme="light"] {
@@ -44,6 +45,7 @@
 
   --accent: #6366f1;
   --accent-light: rgba(99,102,241,0.08);
+  --card-shadow: 0 2px 4px rgba(0,0,0,0.04);
 }
 
 *,
@@ -52,6 +54,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(139, 143, 163, 0.3);
 }
 
 body {
@@ -75,7 +83,6 @@ body {
   z-index: 100;
   transition: width var(--transition), background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   overflow: hidden;
-  border-right: 1px solid var(--sidebar-border);
 }
 
 .sidebar.collapsed {
@@ -378,6 +385,7 @@ body {
   border-radius: var(--sidebar-card-radius);
   padding: 6px;
   margin-bottom: 12px;
+  box-shadow: var(--card-shadow);
   transition: background 0.3s ease;
 }
 
@@ -408,10 +416,8 @@ body {
 
 .menu-card-bottom {
   flex-shrink: 0;
-  border-top: 1px solid var(--sidebar-border);
   margin-top: 4px;
   padding-top: 4px;
-  transition: border-color 0.3s ease;
 }
 
 .sidebar-card-group:last-child {
@@ -443,7 +449,8 @@ body {
   min-height: 36px;
   border-radius: 10px;
   border-left: none;
-  transition: background 0.3s ease, color 0.3s ease;
+  box-shadow: 0 0 0 transparent;
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nav-item svg {
@@ -467,11 +474,13 @@ body {
 .nav-item:hover {
   background: var(--sidebar-hover);
   color: var(--sidebar-text-active);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .nav-item.active {
   background: var(--sidebar-active);
   color: var(--sidebar-text-active);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .nav-item.active span {
@@ -481,10 +490,10 @@ body {
 /* ───── Main Content ───── */
 .main-content {
   margin-left: var(--sidebar-width);
-  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   transition: margin-left var(--transition);
 }
 
@@ -510,10 +519,17 @@ body {
 /* ───── Content Body ───── */
 .content-body {
   flex: 1;
+  min-height: 0;
   padding: 32px;
+  display: flex;
+  flex-direction: column;
 }
 
 #page-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
@@ -594,7 +610,7 @@ body {
 
 .form-input {
   flex: 1;
-  background: var(--content-bg);
+  background: transparent;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 9px 12px;
@@ -606,12 +622,34 @@ body {
 
 .form-input:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--text-secondary);
+  background: var(--sidebar-active);
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--text-secondary);
+  background-color: var(--sidebar-active);
 }
 
 .form-select {
   cursor: pointer;
-  appearance: auto;
+  appearance: none;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b8fa3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 18px;
+  padding-right: 32px;
+  padding-left: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .form-hint {
@@ -801,4 +839,30 @@ body {
   .btn-edit {
     align-self: flex-start;
   }
+}
+
+/* ───── Utility Classes ───── */
+.flex-row {
+  display: flex;
+  gap: 8px;
+}
+
+.flex-row-relative {
+  display: flex;
+  gap: 8px;
+  position: relative;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.spinner-centered {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+}
+
+.form-panel-placeholder {
+  padding-top: 400px;
 }

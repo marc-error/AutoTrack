@@ -1,0 +1,209 @@
+/* ───── Status Pages (Minimalist Typography) ───── */
+
+.status-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px);
+  padding: 40px 32px;
+}
+
+.status-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: statusFadeIn 0.4s ease;
+}
+
+/* ───── Giant Text ───── */
+
+.status-giant {
+  font-size: clamp(8rem, 22vw, 18rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  user-select: none;
+}
+
+/* ───── Label ───── */
+
+.status-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+/* ───── Subtitle ───── */
+
+.status-subtitle {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+/* ───── Navigation Links ───── */
+
+.status-links {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-link {
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  transition: opacity 0.2s ease;
+}
+
+.status-link:hover {
+  opacity: 0.6;
+}
+
+.status-link-separator {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+/* ───── Error Details (Dev Mode) ───── */
+
+.status-error-details {
+  margin-top: 32px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.status-error-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin: 0 auto;
+  transition: background 0.2s ease, color 0.2s ease;
+  opacity: 0.6;
+}
+
+.status-error-toggle:hover {
+  background: var(--sidebar-hover);
+  color: var(--text-primary);
+  opacity: 1;
+}
+
+.status-error-toggle svg {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s ease;
+}
+
+.status-error-content {
+  margin-top: 12px;
+  animation: statusFadeIn 0.2s ease;
+}
+
+.status-error-message {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.12);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.status-error-message strong {
+  font-size: 0.8rem;
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.status-error-message span {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.status-error-stack {
+  padding: 12px 14px;
+  background: var(--content-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+  max-height: 160px;
+  overflow-y: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+/* ───── Animation ───── */
+
+@keyframes statusFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ───── Responsive ───── */
+
+@media (max-width: 768px) {
+  .status-page {
+    min-height: calc(100vh - 60px);
+    padding: 24px 16px;
+  }
+
+  .status-giant {
+    margin-bottom: 16px;
+  }
+
+  .status-label {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+  }
+
+  .status-subtitle {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .status-link {
+    font-size: 0.7rem;
+  }
+}

@@ -45,10 +45,6 @@ export const logout = async () => {
   }
 }
 
-export const getCurrentUser = () => {
-  return auth?.currentUser || null
-}
-
 export const onAuthStateChange = (callback) => {
   if (!auth) {
     callback(null)

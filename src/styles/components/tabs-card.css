@@ -1,0 +1,501 @@
+.tabs-card {
+  background: var(--header-bg);
+  border-radius: 14px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.3s ease;
+}
+
+.tabs-card-header {
+  display: flex;
+  gap: 4px;
+  margin: 0 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tabs-card-tab {
+  padding: 14px 16px 14px 16px;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.tabs-card-tab:hover {
+  color: var(--text-primary);
+}
+
+.tabs-card-tab.active {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.tabs-card-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--text-primary);
+  border-radius: 3px 3px 0 0;
+}
+
+.tabs-card-body {
+  padding: 16px 24px;
+  flex: 1;
+}
+
+/* ══════════════════════════════════
+   Notes Tab
+   ══════════════════════════════════ */
+.notes-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 16px;
+  height: 100%;
+}
+
+.notes-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notes-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.notes-add-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.notes-add-btn:hover {
+  background: var(--sidebar-hover);
+}
+
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.notes-empty {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 16px 0;
+}
+
+.notes-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  position: relative;
+}
+
+.notes-item:hover {
+  background: var(--sidebar-hover);
+}
+
+.notes-item.active {
+  background: var(--sidebar-hover);
+}
+
+.notes-item-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 24px;
+}
+
+.notes-item-preview {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notes-item-delete {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.2s ease;
+}
+
+.notes-item:hover .notes-item-delete {
+  opacity: 1;
+}
+
+.notes-item-delete svg {
+  width: 18px;
+  height: 18px;
+}
+
+.notes-item-delete:hover {
+  color: #ef4444;
+}
+
+.notes-editor {
+  display: flex;
+  flex-direction: column;
+}
+
+.notes-editor-inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.notes-title-input {
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.notes-title-input:focus {
+  border-color: var(--border-color);
+  outline: none;
+}
+
+.notes-title-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+.notes-textarea {
+  flex: 1;
+  min-height: 200px;
+  padding: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.88rem;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.notes-textarea:focus {
+  border-color: var(--border-color);
+  outline: none;
+}
+
+.notes-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  min-height: 200px;
+}
+
+/* ══════════════════════════════════
+   Calculator Tab
+   ══════════════════════════════════ */
+.calc-layout {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 20px;
+  height: 100%;
+}
+
+.calc-display {
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.calc-expression {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  word-break: break-all;
+  text-align: right;
+}
+
+.calc-result {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.calc-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.calc-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.calc-btn {
+  padding: 14px 0;
+  border: none;
+  border-radius: 8px;
+  background: var(--sidebar-hover);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calc-btn:hover {
+  background: var(--border-color);
+}
+
+.calc-btn:active {
+  transform: scale(0.96);
+}
+
+.calc-btn.equals {
+  background: var(--accent);
+  color: #fff;
+}
+
+.calc-btn.equals:hover {
+  opacity: 0.9;
+}
+
+.calc-btn.clear {
+  color: #ef4444;
+}
+
+.calc-btn.back svg {
+  width: 18px;
+  height: 18px;
+}
+
+.calc-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.calc-history-header h4 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.calc-clear-history {
+  border: none;
+  background: transparent;
+  color: #ef4444;
+  font-size: 0.78rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.calc-clear-history:hover {
+  opacity: 0.8;
+}
+
+.calc-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+.calc-empty {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 16px 0;
+}
+
+.calc-history-item {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.calc-history-item:hover {
+  background: var(--sidebar-hover);
+}
+
+.calc-history-expr {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.calc-history-result {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ══════════════════════════════════
+   Edit Profile Tab
+   ══════════════════════════════════ */
+.edit-profile-layout {
+  max-width: 480px;
+}
+
+.edit-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.edit-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.edit-field label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.edit-field input,
+.edit-field select {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.edit-field input:focus,
+.edit-field select:focus {
+  border-color: var(--accent);
+}
+
+.edit-field select {
+  color-scheme: light;
+}
+
+[data-theme="dark"] .edit-field select {
+  color-scheme: dark;
+}
+
+.edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.edit-saved-msg {
+  font-size: 0.85rem;
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.edit-save-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  margin-left: auto;
+}
+
+.edit-save-btn:hover {
+  opacity: 0.9;
+}
+
+.edit-save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

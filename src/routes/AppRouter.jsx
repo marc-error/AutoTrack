@@ -12,11 +12,13 @@ import MembersPage from '../pages/MembersPage'
 import HistoryPage from '../pages/HistoryPage'
 import AccountPage from '../pages/AccountPage'
 import ProtectedRoute from '../utils/protectedRoute'
+import RouteError from '../components/RouteError'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <AppLayout />,
+    errorElement: <RouteError />,
     children: [
       { index: true, element: <Navigate to="/home" replace /> },
       { path: 'home', element: <HomePage /> },
@@ -78,7 +80,15 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         )
       },
-      { path: 'account', element: <AccountPage /> },
+      {
+        path: 'account',
+        element: (
+          <ProtectedRoute>
+            <AccountPage />
+          </ProtectedRoute>
+        )
+      },
+      { path: '*', element: <RouteError /> },
     ],
   },
 ])

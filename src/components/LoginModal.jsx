@@ -14,7 +14,7 @@ const LoginModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
-      const savedEmail = localStorage.getItem(REMEMBER_KEY)
+      const savedEmail = sessionStorage.getItem(REMEMBER_KEY)
       if (savedEmail) {
         setEmail(savedEmail)
         setRememberMe(true)
@@ -34,9 +34,9 @@ const LoginModal = ({ isOpen, onClose }) => {
 
     if (result.user) {
       if (rememberMe) {
-        localStorage.setItem(REMEMBER_KEY, email.trim())
+        sessionStorage.setItem(REMEMBER_KEY, email.trim())
       } else {
-        localStorage.removeItem(REMEMBER_KEY)
+        sessionStorage.removeItem(REMEMBER_KEY)
       }
       setEmail('')
       setPassword('')

@@ -840,3 +840,29 @@ body {
     align-self: flex-start;
   }
 }
+
+/* ───── Utility Classes ───── */
+.flex-row {
+  display: flex;
+  gap: 8px;
+}
+
+.flex-row-relative {
+  display: flex;
+  gap: 8px;
+  position: relative;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.spinner-centered {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+}
+
+.form-panel-placeholder {
+  padding-top: 400px;
+}

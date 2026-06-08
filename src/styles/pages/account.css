@@ -1,25 +1,34 @@
 .account-page {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 12px;
+  margin: -32px -32px -32px -32px;
+  padding: 12px 12px 12px 0;
+  flex: 1;
+  min-height: 0;
 }
 
-/* ── Header Card ── */
-.account-header-card {
-  display: flex;
-  align-items: center;
+/* ── Card ── */
+.account-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
   gap: 24px;
   background: var(--header-bg);
-  border: 1px solid var(--border-color);
   border-radius: 14px;
-  padding: 28px 32px;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  box-shadow: var(--card-shadow);
+  padding: 28px;
+  transition: background 0.3s ease;
 }
 
 /* ── Avatar ── */
+.account-card-left {
+  flex-shrink: 0;
+}
+
 .account-avatar {
-  width: 72px;
-  height: 72px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   background: var(--accent-light);
   display: flex;
@@ -36,15 +45,14 @@
 }
 
 .account-avatar-initials {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: var(--accent);
   user-select: none;
 }
 
-/* ── Header Info ── */
-.account-header-info {
-  flex: 1;
+/* ── Center Info ── */
+.account-card-center {
   min-width: 0;
 }
 
@@ -52,7 +60,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .account-name-row h2 {
@@ -65,40 +73,46 @@
   text-overflow: ellipsis;
 }
 
-.account-role-badge {
-  display: inline-block;
-  font-size: 0.65rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  padding: 3px 10px;
-  border-radius: 20px;
-  white-space: nowrap;
+.account-info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.account-status-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+
+.account-status-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.account-status-item svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--text-primary);
+}
+
+.account-status-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--border-color);
   flex-shrink: 0;
 }
 
-.role-admin {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.role-manager {
-  color: #f59e0b;
-  background: rgba(245, 158, 11, 0.1);
-}
-
-.role-staff {
-  color: #22c55e;
-  background: rgba(34, 197, 94, 0.1);
-}
-
-.account-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
+.status-label {
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .meta-sep {
@@ -106,19 +120,13 @@
   opacity: 0.5;
 }
 
-.account-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-}
-
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   flex-shrink: 0;
+  vertical-align: middle;
+  margin-top: -1px;
 }
 
 .status-dot.active {
@@ -131,30 +139,38 @@
   box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
 }
 
+/* ── Right Column (chips + actions) ── */
+.account-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
 /* ── Contact Chips ── */
 .account-contact-chips {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex-shrink: 0;
 }
 
 .contact-chip {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
+  gap: 10px;
+  padding: 10px 16px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   color: var(--text-secondary);
   background: transparent;
   white-space: nowrap;
 }
 
 .contact-chip svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
   color: var(--text-secondary);
 }
@@ -164,19 +180,18 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  flex-shrink: 0;
 }
 
 .account-action-btn {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 7px 12px;
+  gap: 6px;
+  padding: 8px 14px;
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: var(--accent);
-  font-size: 0.8rem;
+  color: var(--sidebar-text-active);
+  font-size: 0.85rem;
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
@@ -185,12 +200,12 @@
 }
 
 .account-action-btn svg {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
 }
 
 .account-action-btn:hover {
-  background: var(--accent-light);
+  background: var(--sidebar-active);
 }
 
 .account-action-btn.action-danger {
@@ -233,43 +248,52 @@
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
-  .account-header-card {
-    flex-wrap: wrap;
-    gap: 16px;
-    padding: 24px 20px;
+  .account-card {
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    padding: 24px;
+  }
+
+  .account-card-right {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .account-contact-chips {
     flex-direction: row;
-    order: 3;
-    width: 100%;
-  }
-
-  .account-actions {
-    order: 4;
-    width: 100%;
-    justify-content: flex-start;
-    flex-wrap: wrap;
   }
 }
 
 @media (max-width: 768px) {
-  .account-header-card {
-    flex-direction: column;
+  .account-card {
+    grid-template-columns: 1fr;
     text-align: center;
     padding: 24px 20px;
+  }
+
+  .account-card-left {
+    justify-self: center;
   }
 
   .account-name-row {
     justify-content: center;
   }
 
-  .account-meta {
+  .account-info-row {
     justify-content: center;
+    flex-wrap: wrap;
   }
 
-  .account-status {
+  .account-status-row {
     justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .account-card-right {
+    flex-direction: column;
+    align-items: center;
   }
 
   .account-contact-chips {
@@ -278,5 +302,6 @@
 
   .account-actions {
     justify-content: center;
+    flex-wrap: wrap;
   }
 }

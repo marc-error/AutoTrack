@@ -288,9 +288,9 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
             />
           </div>
 
-          <div className="form-group">
+            <div className="form-group">
             <label htmlFor="staff-email">Email</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div className="flex-row">
               <input
                 id="staff-email"
                 type="email"
@@ -299,7 +299,6 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isSubmitting || isEditing}
-                style={{ flex: 1 }}
                 required={!isEditing}
               />
               {isEditing && (
@@ -342,7 +341,7 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
           {!isEditing && useCustomPassword && (
             <div className="form-group">
               <label htmlFor="staff-password">Password</label>
-              <div style={{ display: 'flex', gap: '8px', position: 'relative' }}>
+              <div className="flex-row-relative">
                 <input
                   id="staff-password"
                   type={showPassword ? 'text' : 'password'}
@@ -353,7 +352,6 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
                   disabled={isSubmitting}
                   minLength={6}
                   required
-                  style={{ flex: 1 }}
                 />
                 <button
                   type="button"

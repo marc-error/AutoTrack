@@ -20,7 +20,7 @@ export default class ErrorBoundary extends Component {
 
   handleGoHome = () => {
     this.setState({ hasError: false, error: null, errorInfo: null, showDetails: false })
-    window.location.href = '/home'
+    window.location.replace('/home')
   }
 
   toggleDetails = () => {

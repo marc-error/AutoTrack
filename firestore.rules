@@ -29,7 +29,8 @@ service cloud.firestore {
         && request.auth.uid == userId
         && request.resource.data.role == 'staff'
         && request.resource.data.isActive == true
-        && request.resource.data.keys().hasAll(['email', 'displayName', 'role', 'isActive', 'createdAt']);
+        && request.resource.data.keys().hasAll(['email', 'displayName', 'role', 'isActive', 'createdAt'])
+        && request.resource.data.keys().hasOnly(['email', 'displayName', 'role', 'isActive', 'createdAt', 'age', 'sex', 'birthday', 'photoURL', 'firebaseUid']);
 
       // Update:
       //  - Users can update their own doc (limited fields: displayName, photoURL)
@@ -40,7 +41,7 @@ service cloud.firestore {
           // Own profile: limited fields only
           (request.auth.uid == userId
             && request.resource.data.diff(resource.data).affectedKeys()
-                .hasOnly(['displayName', 'photoURL', 'updatedAt']))
+                .hasOnly(['displayName', 'photoURL', 'age', 'sex', 'birthday', 'updatedAt']))
           ||
           // Admin: full access
           getUserRole() == 'admin'

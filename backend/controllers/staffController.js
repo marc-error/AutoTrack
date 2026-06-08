@@ -54,7 +54,7 @@ export const getStaff = async (req, res, next) => {
 
 export const createStaff = async (req, res, next) => {
   try {
-    const { email, displayName, role, photoURL } = req.body
+    const { email, displayName, role, photoURL, age, sex, birthday, password } = req.body
 
     if (!email || !displayName) {
       return response.error(res, 'email and displayName are required', 400)
@@ -76,8 +76,21 @@ export const createStaff = async (req, res, next) => {
       return response.error(res, 'photoURL must be a valid URL', 400)
     }
 
+    if (age !== undefined && age !== null && age !== '') {
+      const ageNum = Number(age)
+      if (isNaN(ageNum) || ageNum < 16 || ageNum > 100) {
+        return response.error(res, 'Age must be between 16 and 100', 400)
+      }
+    }
+
+    if (sex !== undefined && sex !== null && sex !== '') {
+      if (!['male', 'female'].includes(sex)) {
+        return response.error(res, 'Sex must be male or female', 400)
+      }
+    }
+
     const normalizedEmail = email.toLowerCase().trim()
-    const tempPassword = generateTempPassword()
+    const tempPassword = password && password.trim() ? password.trim() : generateTempPassword()
 
     let authUser
     try {
@@ -95,11 +108,14 @@ export const createStaff = async (req, res, next) => {
       throw authErr
     }
 
-    const docId = normalizedEmail
+    const docId = authUser.uid
     const data = {
       email: normalizedEmail,
       displayName: sanitizeString(displayName.trim()),
       role: role || 'staff',
+      age: age ? Number(age) : null,
+      sex: sex || null,
+      birthday: birthday || null,
       photoURL: photoURL || null,
       isActive: true,
       firebaseUid: authUser.uid,
@@ -108,7 +124,9 @@ export const createStaff = async (req, res, next) => {
     }
 
     const created = await firebaseService.create(COLLECTIONS.STAFF, docId, data)
-    return response.success(res, { ...created, tempPassword }, 201)
+
+    const isCustomPassword = password && password.trim()
+    return response.success(res, { ...created, ...(isCustomPassword ? {} : { tempPassword }) }, 201)
   } catch (err) {
     next(err)
   }
@@ -121,7 +139,7 @@ export const updateStaff = async (req, res, next) => {
       return response.error(res, 'Staff not found', 404)
     }
 
-    const { email, displayName, role, photoURL, isActive } = req.body
+    const { email, displayName, role, photoURL, isActive, age, sex, birthday } = req.body
     const updates = {}
 
     if (email !== undefined) {
@@ -160,6 +178,33 @@ export const updateStaff = async (req, res, next) => {
         return response.error(res, 'isActive must be a boolean', 400)
       }
       updates.isActive = isActive
+    }
+
+    if (age !== undefined) {
+      if (age === null || age === '') {
+        updates.age = null
+      } else {
+        const ageNum = Number(age)
+        if (isNaN(ageNum) || ageNum < 16 || ageNum > 100) {
+          return response.error(res, 'Age must be between 16 and 100', 400)
+        }
+        updates.age = ageNum
+      }
+    }
+
+    if (sex !== undefined) {
+      if (sex === null || sex === '') {
+        updates.sex = null
+      } else {
+        if (!['male', 'female'].includes(sex)) {
+          return response.error(res, 'Sex must be male or female', 400)
+        }
+        updates.sex = sex
+      }
+    }
+
+    if (birthday !== undefined) {
+      updates.birthday = birthday || null
     }
 
     if (Object.keys(updates).length === 0) {
@@ -255,20 +300,15 @@ export const updateEmail = async (req, res, next) => {
       email: normalizedEmail
     })
 
-    // Update Firestore document - move to new email ID and update email field
+    // Update Firestore document
     const updates = {
       email: normalizedEmail,
       updatedAt: FieldValue.serverTimestamp()
     }
 
-    await firebaseService.update(COLLECTIONS.STAFF, normalizedEmail, updates)
-    
-    // Delete old document if email changed
-    if (req.params.id !== normalizedEmail) {
-      await firebaseService.remove(COLLECTIONS.STAFF, req.params.id)
-    }
+    await firebaseService.update(COLLECTIONS.STAFF, req.params.id, updates)
 
-    return response.success(res, { ...updates, id: normalizedEmail })
+    return response.success(res, { ...updates, id: req.params.id })
   } catch (err) {
     next(err)
   }

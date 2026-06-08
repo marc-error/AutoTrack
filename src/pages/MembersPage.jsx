@@ -66,10 +66,6 @@ export default function MembersPage() {
     fetchStaff()
   }, [fetchStaff])
 
-  const handleAdd = () => {
-    setEditingStaff(null)
-  }
-
   const handleEdit = (member) => {
     setEditingStaff(member)
   }
@@ -131,7 +127,7 @@ export default function MembersPage() {
             </div>
           </div>
           <div className="members-form-panel open">
-            <div className="members-loading" style={{ paddingTop: '400px' }}>
+            <div className="members-loading form-panel-placeholder">
               <div className="login-spinner" style={{ width: 32, height: 32 }}></div>
               <p>Loading...</p>
             </div>
@@ -158,7 +154,7 @@ export default function MembersPage() {
             </div>
           </div>
           <div className="members-form-panel open">
-            <div className="members-loading" style={{ paddingTop: '400px' }}>
+            <div className="members-loading form-panel-placeholder">
               <p>Please retry to continue</p>
             </div>
           </div>

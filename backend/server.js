@@ -41,6 +41,22 @@ const limiter = rateLimit({
 })
 app.use(limiter)
 
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many auth attempts, please try again later' }
+})
+
+const sensitiveLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests for this operation' }
+})
+
 app.use(express.json({ limit: '10kb' }))
 
 app.use('/api', routes)

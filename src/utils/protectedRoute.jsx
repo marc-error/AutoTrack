@@ -3,14 +3,14 @@ import { useAuth } from '../context/AuthContext'
 import AccessDenied from '../components/AccessDenied'
 import AccountPending from '../components/AccountPending'
 
-const ProtectedRoute = ({ children, requiredRole, requiredPermission }) => {
+const ProtectedRoute = ({ children, requiredRole }) => {
   const { isAuthenticated, loading, staffProfile, hasMinRole } = useAuth()
 
   if (loading) {
     return (
       <div className="status-page">
         <div className="status-card">
-          <div className="login-spinner" style={{ width: 32, height: 32, margin: '0 auto' }}></div>
+          <div className="login-spinner spinner-centered"></div>
           <p style={{ color: 'var(--text-secondary)', marginTop: 16 }}>Loading...</p>
         </div>
       </div>

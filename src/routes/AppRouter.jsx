@@ -80,7 +80,14 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         )
       },
-      { path: 'account', element: <AccountPage /> },
+      {
+        path: 'account',
+        element: (
+          <ProtectedRoute>
+            <AccountPage />
+          </ProtectedRoute>
+        )
+      },
       { path: '*', element: <RouteError /> },
     ],
   },

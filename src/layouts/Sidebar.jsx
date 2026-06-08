@@ -1,25 +1,19 @@
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import LoginModal from '../components/LoginModal'
-import { ROLE_LABELS } from '../utils/roles'
 
 const THEME_KEY = 'autotrack_theme'
 
 export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
   const [theme, setTheme] = useState(() => localStorage.getItem(THEME_KEY) || 'dark')
   const [loginModalOpen, setLoginModalOpen] = useState(false)
-  const location = useLocation()
   const { isAuthenticated, staffProfile, hasMinRole } = useAuth()
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem(THEME_KEY, theme)
   }, [theme])
-
-  useEffect(() => {
-    if (window.innerWidth <= 768) onCloseMobile()
-  }, [location, onCloseMobile])
 
   const toggleTheme = () => {
     setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { onAuthStateChange, loginWithEmail, logout as authLogout } from '../services/auth'
-import { getStaffProfile } from '../services/firestore'
+import { getStaffProfile, updateStaffProfile } from '../services/firestore'
 
 const AuthContext = createContext(null)
 
@@ -59,15 +59,19 @@ export const AuthProvider = ({ children }) => {
     return result
   }
 
-  const hasRole = (role) => {
-    if (!staffProfile) return false
-    return staffProfile.role === role
-  }
-
   const hasMinRole = (requiredRole) => {
     if (!staffProfile) return false
     const hierarchy = { admin: 3, manager: 2, staff: 1 }
     return (hierarchy[staffProfile.role] || 0) >= (hierarchy[requiredRole] || 0)
+  }
+
+  const updateProfile = async (updates) => {
+    if (!user) return { error: 'Not authenticated' }
+    const { error } = await updateStaffProfile(user.uid, updates)
+    if (!error) {
+      setStaffProfile(prev => ({ ...prev, ...updates }))
+    }
+    return { error }
   }
 
   const value = {
@@ -78,8 +82,8 @@ export const AuthProvider = ({ children }) => {
     authError,
     login,
     logout,
-    hasRole,
     hasMinRole,
+    updateProfile,
     clearError: () => setAuthError(null)
   }
 

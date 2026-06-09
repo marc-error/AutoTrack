@@ -1,3 +1,5 @@
+// * Sidebar navigation — handles desktop collapse, mobile slide-out, theme
+// * toggling, role-based menu items, and the staff login/account link.
 import { NavLink } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
@@ -6,10 +8,12 @@ import LoginModal from '../components/LoginModal'
 const THEME_KEY = 'autotrack_theme'
 
 export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
+  // Theme preference persisted to localStorage; toggles data-theme attribute on <html>
   const [theme, setTheme] = useState(() => localStorage.getItem(THEME_KEY) || 'dark')
   const [loginModalOpen, setLoginModalOpen] = useState(false)
   const { isAuthenticated, staffProfile, hasMinRole } = useAuth()
 
+  // Apply theme to document root and persist choice
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem(THEME_KEY, theme)
@@ -79,6 +83,8 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
               {isAuthenticated && staffProfile && (
                 <>
                   <div className="sidebar-label">MENU</div>
+                  <div className="sidebar-divider"></div>
+                  {/* Regular menu items visible to all authenticated staff */}
                   <NavLink to="/inventory" className={navClass}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
@@ -113,6 +119,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                     </svg>
                     <span>History</span>
                   </NavLink>
+                  {/* ! Manager+ only: Reports */}
                   {hasMinRole('manager') && (
                     <NavLink to="/reports" className={navClass}>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -121,6 +128,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                       <span>Reports</span>
                     </NavLink>
                   )}
+                  {/* ! Admin only: Members management */}
                   {hasMinRole('admin') && (
                     <NavLink to="/members" className={navClass}>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -136,6 +144,9 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
               )}
             </div>
             <div className="menu-card-bottom">
+              <div className="sidebar-divider"></div>
+              {/* ! Collapse button behaves differently on mobile vs desktop:
+                  ! On mobile it closes the slide-out menu; on desktop it collapses the sidebar. */}
               <button className="collapse-toggle" title="Collapse sidebar" onClick={() => {
                 if (window.innerWidth <= 768) {
                   onCloseMobile()
@@ -192,6 +203,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
 
       </aside>
 
+      {/* Backdrop overlay — clicking it closes the mobile sidebar */}
       {mobileOpen && <div className="sidebar-overlay show" onClick={onCloseMobile}></div>}
 
       <LoginModal isOpen={loginModalOpen} onClose={handleLoginClose} />

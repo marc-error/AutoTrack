@@ -9,15 +9,17 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
   const [showEmailChange, setShowEmailChange] = useState(false)
   const [newEmail, setNewEmail] = useState('')
   const [emailChangeLoading, setEmailChangeLoading] = useState(false)
-  const [useCustomPassword, setUseCustomPassword] = useState(false)
-  const [customPassword, setCustomPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [role, setRole] = useState('staff')
+  const [age, setAge] = useState('')
+  const [sex, setSex] = useState('')
+  const [birthday, setBirthday] = useState('')
   const [photoURL, setPhotoURL] = useState('')
   const [isActive, setIsActive] = useState(true)
+  const [password, setPassword] = useState('')
 
   const isEditing = !!staff
 
@@ -26,6 +28,9 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
       setDisplayName(staff.displayName || '')
       setEmail(staff.email || '')
       setRole(staff.role || 'staff')
+      setAge(staff.age || '')
+      setSex(staff.sex || '')
+      setBirthday(staff.birthday || '')
       setPhotoURL(staff.photoURL || '')
       setIsActive(staff.isActive !== false)
       setError(null)
@@ -33,13 +38,15 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
       setShowEmailChange(false)
       setNewEmail('')
       setEmailChangeLoading(false)
-      setUseCustomPassword(false)
-      setCustomPassword('')
       setShowPassword(false)
+      setPassword('')
     } else if (isOpen) {
       setDisplayName('')
       setEmail('')
       setRole('staff')
+      setAge('')
+      setSex('')
+      setBirthday('')
       setPhotoURL('')
       setIsActive(true)
       setError(null)
@@ -47,9 +54,8 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
       setShowEmailChange(false)
       setNewEmail('')
       setEmailChangeLoading(false)
-      setUseCustomPassword(false)
-      setCustomPassword('')
       setShowPassword(false)
+      setPassword('')
     }
   }, [isOpen, staff])
 
@@ -78,11 +84,7 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
       setError('Invalid email format.')
       return
     }
-    if (!isEditing && useCustomPassword && !customPassword.trim()) {
-      setError('Password is required.')
-      return
-    }
-    if (!isEditing && useCustomPassword && customPassword.trim().length < 6) {
+    if (!isEditing && password.trim() && password.trim().length < 6) {
       setError('Password must be at least 6 characters.')
       return
     }
@@ -93,9 +95,12 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
         displayName: displayName.trim(),
         email: email.trim().toLowerCase(),
         role,
+        age: age ? Number(age) : null,
+        sex: sex || null,
+        birthday: birthday || null,
         photoURL: photoURL.trim() || null,
         isActive,
-        password: useCustomPassword ? customPassword : undefined
+        password: password.trim() || undefined
       })
       if (result?.data?.tempPassword) {
         setTempPassword(result.data.tempPassword)
@@ -181,6 +186,8 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
       <div className="staff-form-header">
         <h3>{tempPassword ? 'Password Reset' : isEditing ? 'Edit Staff Member' : 'Add Staff Member'}</h3>
       </div>
+
+      <div className="staff-form-divider"></div>
 
       {tempPassword ? (
         <div className="staff-form-body">
@@ -288,7 +295,7 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
             />
           </div>
 
-            <div className="form-group">
+          <div className="form-group">
             <label htmlFor="staff-email">Email</label>
             <div className="flex-row">
               <input
@@ -316,42 +323,21 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
                 </button>
               )}
             </div>
-            {isEditing && <span className="form-hint">Click the edit icon to change email.</span>}
           </div>
 
           {!isEditing && (
             <div className="form-group">
-              <div className="form-row form-row-between">
-                <label htmlFor="staff-custom-password">Custom Password</label>
-                <label className="toggle-switch">
-                  <input
-                    id="staff-custom-password"
-                    type="checkbox"
-                    checked={useCustomPassword}
-                    onChange={(e) => setUseCustomPassword(e.target.checked)}
-                    disabled={isSubmitting}
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
-              <span className="form-hint">If off, a temporary password will be generated.</span>
-            </div>
-          )}
-
-          {!isEditing && useCustomPassword && (
-            <div className="form-group">
-              <label htmlFor="staff-password">Password</label>
+              <label htmlFor="staff-password">Password (Optional)</label>
               <div className="flex-row-relative">
                 <input
                   id="staff-password"
                   type={showPassword ? 'text' : 'password'}
                   className="form-input"
-                  placeholder="Enter password (min 6 characters)"
-                  value={customPassword}
-                  onChange={(e) => setCustomPassword(e.target.value)}
+                  placeholder="Leave blank for auto-generated password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   disabled={isSubmitting}
                   minLength={6}
-                  required
                 />
                 <button
                   type="button"
@@ -367,7 +353,7 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
                     </svg>
                   ) : (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
                       <line x1="1" y1="1" x2="23" y2="23"/>
                     </svg>
                   )}
@@ -376,32 +362,99 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
             </div>
           )}
 
-          <div className="form-group">
-            <label htmlFor="staff-role">Role</label>
-            <select
-              id="staff-role"
-              className="form-input form-select"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              disabled={isSubmitting}
-            >
-              <option value="staff">Staff</option>
-              <option value="manager">Manager</option>
-              <option value="admin">Administrator</option>
-            </select>
+          {isEditing && (
+            <div className="form-group">
+              <label>Reset Password</label>
+              <button
+                type="button"
+                className="staff-form-reset-banner"
+                onClick={handleResetPassword}
+                disabled={isSubmitting || emailChangeLoading}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 4v6h6"/>
+                  <path d="M23 20v-6h-6"/>
+                  <path d="M20.49 9A9 9 0 05.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 03.51 15"/>
+                </svg>
+                Reset Password
+              </button>
+            </div>
+          )}
+
+          <div className="staff-form-row-3">
+            <div className="form-group">
+              <label htmlFor="staff-role">Role</label>
+              <div className="select-wrapper">
+                <select
+                  id="staff-role"
+                  className="form-input form-select"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  disabled={isSubmitting}
+                >
+                  <option value="staff">Staff</option>
+                  <option value="manager">Manager</option>
+                  <option value="admin">Administrator</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="staff-age">Age</label>
+              <input
+                id="staff-age"
+                type="number"
+                className="form-input"
+                placeholder="Age"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                disabled={isSubmitting}
+                min="0"
+                max="150"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="staff-sex">Sex</label>
+              <div className="select-wrapper">
+                <select
+                  id="staff-sex"
+                  className="form-input form-select"
+                  value={sex}
+                  onChange={(e) => setSex(e.target.value)}
+                  disabled={isSubmitting}
+                >
+                  <option value="">Select...</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="staff-photoURL">Photo URL (optional)</label>
-            <input
-              id="staff-photoURL"
-              type="url"
-              className="form-input"
-              placeholder="https://example.com/photo.jpg"
-              value={photoURL}
-              onChange={(e) => setPhotoURL(e.target.value)}
-              disabled={isSubmitting}
-            />
+          <div className="staff-form-row-2">
+            <div className="form-group">
+              <label htmlFor="staff-birthday">Birthday</label>
+              <input
+                id="staff-birthday"
+                type="date"
+                className="form-input"
+                placeholder="MM/DD/YYYY"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+                disabled={isSubmitting}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="staff-photoURL">Photo URL (Optional)</label>
+              <input
+                id="staff-photoURL"
+                type="url"
+                className="form-input"
+                placeholder="https://example.com/photo.jpg"
+                value={photoURL}
+                onChange={(e) => setPhotoURL(e.target.value)}
+                disabled={isSubmitting}
+              />
+            </div>
           </div>
 
           <div className="form-group">
@@ -419,24 +472,6 @@ export default function StaffFormModal({ isOpen, onClose, onSubmit, staff = null
               </label>
             </div>
           </div>
-
-          {isEditing && (
-            <div className="staff-form-actions-secondary">
-              <button
-                type="button"
-                className="staff-form-reset-btn"
-                onClick={handleResetPassword}
-                disabled={isSubmitting || emailChangeLoading}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M1 4v6h6"/>
-                  <path d="M23 20v-6h-6"/>
-                  <path d="M20.49 9A9 9 0 05.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 03.51 15"/>
-                </svg>
-                Reset Password
-              </button>
-            </div>
-          )}
 
           <div className="staff-form-actions">
             <button type="button" className="btn-edit" onClick={handleClose} disabled={isSubmitting}>

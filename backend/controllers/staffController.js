@@ -1,3 +1,6 @@
+// * Staff management controller — handles CRUD operations for staff members.
+// * Each create/update syncs both Firebase Auth (for login) and Firestore
+// * (for profile data). Deleting a staff member removes both.
 import * as firebaseService from '../services/firebaseService.js'
 import * as response from '../utils/response.js'
 import { COLLECTIONS } from '../services/firebaseService.js'
@@ -9,6 +12,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const URL_REGEX = /^(https?:\/\/)/
 const ALLOWED_ROLES = ['admin', 'manager', 'staff']
 
+// ! Strip HTML tags from user input to prevent XSS
 const sanitizeString = (str) => {
   if (typeof str !== 'string') return str
   return str.replace(/<[^>]*>/g, '').trim()
@@ -20,6 +24,8 @@ const isValidUrl = (url) => {
   return URL_REGEX.test(url)
 }
 
+// Generate a random temp password: "At" + 16 hex chars + "!"
+// Used when creating staff without a custom password.
 const generateTempPassword = () => {
   return 'At' + crypto.randomBytes(8).toString('hex') + '!'
 }
@@ -52,6 +58,9 @@ export const getStaff = async (req, res, next) => {
   }
 }
 
+// * Create staff — creates Firebase Auth user first, then Firestore document.
+// * If no password provided, generates a temp password returned in the response.
+// * If email already exists in Auth, returns 409 Conflict.
 export const createStaff = async (req, res, next) => {
   try {
     const { email, displayName, role, photoURL, age, sex, birthday, password } = req.body
@@ -132,6 +141,9 @@ export const createStaff = async (req, res, next) => {
   }
 }
 
+// * Update staff — validates each field individually, then applies all valid
+// * updates to both Firestore and (if email changed) Firebase Auth.
+// * Only admins can change roles.
 export const updateStaff = async (req, res, next) => {
   try {
     const existing = await firebaseService.getById(COLLECTIONS.STAFF, req.params.id)
@@ -220,6 +232,8 @@ export const updateStaff = async (req, res, next) => {
   }
 }
 
+// * Delete staff — removes Firebase Auth user (if exists) then Firestore document.
+// * Ignores "user-not-found" Auth errors since the user may have been deleted already.
 export const deleteStaff = async (req, res, next) => {
   try {
     const existing = await firebaseService.getById(COLLECTIONS.STAFF, req.params.id)
@@ -244,6 +258,8 @@ export const deleteStaff = async (req, res, next) => {
   }
 }
 
+// * Reset password — generates a new temp password and updates Firebase Auth.
+// * Returns the temp password so admin can share it with the staff member.
 export const resetPassword = async (req, res, next) => {
   try {
     const existing = await firebaseService.getById(COLLECTIONS.STAFF, req.params.id)
@@ -266,6 +282,8 @@ export const resetPassword = async (req, res, next) => {
   }
 }
 
+// * Update email — checks the new email isn't already taken, then updates
+// * both Firebase Auth and the Firestore document.
 export const updateEmail = async (req, res, next) => {
   try {
     const { newEmail } = req.body

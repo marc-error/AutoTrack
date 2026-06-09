@@ -246,7 +246,7 @@
   font-weight: 600;
 }
 
-/* ── Responsive ── */
+/* ! ── Responsive ── */
 @media (max-width: 1024px) {
   .account-card {
     grid-template-columns: auto 1fr;

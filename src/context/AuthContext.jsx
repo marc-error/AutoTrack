@@ -1,3 +1,6 @@
+// * Authentication context — manages Firebase auth state, loads the staff
+// * profile from Firestore on login, and exposes role-checking helpers.
+// * All auth-related state (user, profile, loading) lives here.
 import { createContext, useContext, useState, useEffect } from 'react'
 import { onAuthStateChange, loginWithEmail, logout as authLogout } from '../services/auth'
 import { getStaffProfile, updateStaffProfile } from '../services/firestore'
@@ -18,6 +21,8 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [authError, setAuthError] = useState(null)
 
+  // ! Listen for Firebase auth state changes. On login, fetch the staff
+  // ! profile from Firestore. On logout, clear both user and profile.
   useEffect(() => {
     const unsubscribe = onAuthStateChange(async (firebaseUser) => {
       if (firebaseUser) {
@@ -59,6 +64,8 @@ export const AuthProvider = ({ children }) => {
     return result
   }
 
+  // ! Role hierarchy check: admin(3) > manager(2) > staff(1)
+  // ! Used to conditionally render admin/manager-only UI elements.
   const hasMinRole = (requiredRole) => {
     if (!staffProfile) return false
     const hierarchy = { admin: 3, manager: 2, staff: 1 }

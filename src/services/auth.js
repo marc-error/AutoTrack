@@ -1,3 +1,5 @@
+// * Firebase Authentication helpers — wraps signIn/signOut/onAuthStateChanged
+// * with error handling and user-friendly error messages.
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -5,6 +7,7 @@ import {
 } from 'firebase/auth'
 import { auth } from '../config/firebase'
 
+// Sign in with email/password. Returns { user, error } — check error for failure.
 export const loginWithEmail = async (email, password) => {
   if (!auth) {
     return { user: null, error: 'Firebase is not configured. Please set up your .env file.' }
@@ -14,6 +17,7 @@ export const loginWithEmail = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
     return { user: userCredential.user, error: null }
   } catch (error) {
+    // ! Map Firebase auth error codes to user-friendly messages
     let errorMessage = 'Failed to login. Please check your credentials.'
 
     if (error.code === 'auth/user-not-found') {
@@ -32,6 +36,7 @@ export const loginWithEmail = async (email, password) => {
   }
 }
 
+// Sign out the current user. Returns { error }.
 export const logout = async () => {
   if (!auth) {
     return { error: 'Firebase is not configured.' }
@@ -45,6 +50,8 @@ export const logout = async () => {
   }
 }
 
+// * Subscribe to Firebase auth state changes. Calls callback with the current
+// * user (or null when signed out). Returns an unsubscribe function.
 export const onAuthStateChange = (callback) => {
   if (!auth) {
     callback(null)

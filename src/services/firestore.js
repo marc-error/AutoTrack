@@ -1,3 +1,5 @@
+// * Firestore operations for the staff collection — read and update staff
+// * profiles. Used by AuthContext to load the logged-in user's profile.
 import {
   doc,
   getDoc,
@@ -8,6 +10,7 @@ import { db } from '../config/firebase'
 
 export const STAFF_COLLECTION = 'staff'
 
+// Fetch a staff profile by Firebase UID. Returns { data, error }.
 export const getStaffProfile = async (uid) => {
   try {
     const docRef = doc(db, STAFF_COLLECTION, uid)
@@ -23,6 +26,8 @@ export const getStaffProfile = async (uid) => {
   }
 }
 
+// Update a staff profile. Merges updates into the existing document and
+// sets updatedAt to server timestamp. Returns { error }.
 export const updateStaffProfile = async (uid, updates) => {
   try {
     const docRef = doc(db, STAFF_COLLECTION, uid)

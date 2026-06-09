@@ -1,3 +1,6 @@
+// * Central route definitions. Public routes (home, search, browse) are
+// * accessible to everyone. Protected routes require authentication via
+// * ProtectedRoute. Some routes also require a minimum role (manager, admin).
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import AppLayout from '../layouts/AppLayout'
 import HomePage from '../pages/HomePage'

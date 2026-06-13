@@ -37,6 +37,6 @@ AutoTrack is a web-based automotive inventory and billing system built to simpli
 ## Requirements
 
 - **Backend:** PHP or Node.js  
-- **Frontend:** HTML, CSS, JavaScript (responsive design)  
+- **Frontend:** React, HTML, CSS, JavaScript (responsive design)  
 - **Database:** Firebase / Google Cloud  
 - **Browser Support:** Chrome, Edge, Brave  

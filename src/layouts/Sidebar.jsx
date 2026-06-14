@@ -15,12 +15,8 @@ const SidebarSkeleton = ({ collapsed, role }) => {
 
   return (
     <>
-      {!collapsed && (
-        <>
-          <div className="sidebar-label">MENU</div>
-          <div className="sidebar-divider"></div>
-        </>
-      )}
+      <div className="sidebar-label">MENU</div>
+      <div className="sidebar-divider"></div>
       {widths.map((w, i) => (
         <div key={i} className="sidebar-skeleton-item">
           <div className="skeleton skeleton-icon" />

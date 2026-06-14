@@ -3,5 +3,6 @@
 @import './components/confirm-modal.css';
 @import './components/status-pages.css';
 @import './components/tabs-card.css';
+@import './components/skeleton.css';
 @import './pages/members.css';
 @import './pages/account.css';

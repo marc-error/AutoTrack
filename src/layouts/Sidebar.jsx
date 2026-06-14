@@ -1,19 +1,39 @@
-// * Sidebar navigation — handles desktop collapse, mobile slide-out, theme
-// * toggling, role-based menu items, and the staff login/account link.
 import { NavLink } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import LoginModal from '../components/LoginModal'
 
 const THEME_KEY = 'autotrack_theme'
+const ROLE_KEY = 'autotrack_role'
+
+const ALL_SKELETON_WIDTHS = ['9ch', '7ch', '7ch', '12ch', '7ch', '7ch', '7ch']
+const ROLE_COUNT = { staff: 5, manager: 6, admin: 7 }
+
+const SidebarSkeleton = ({ collapsed, role }) => {
+  const count = ROLE_COUNT[role] || 5
+  const widths = ALL_SKELETON_WIDTHS.slice(0, count)
+
+  return (
+    <>
+      <div className="sidebar-label">MENU</div>
+      <div className="sidebar-divider"></div>
+      {widths.map((w, i) => (
+        <div key={i} className="sidebar-skeleton-item">
+          <div className="skeleton skeleton-icon" />
+          {!collapsed && <div className="skeleton skeleton-text" style={{ width: w }} />}
+        </div>
+      ))}
+    </>
+  )
+}
 
 export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
-  // Theme preference persisted to localStorage; toggles data-theme attribute on <html>
   const [theme, setTheme] = useState(() => localStorage.getItem(THEME_KEY) || 'dark')
   const [loginModalOpen, setLoginModalOpen] = useState(false)
-  const { isAuthenticated, staffProfile, hasMinRole } = useAuth()
+  const { isAuthenticated, staffProfile, loading, hasMinRole } = useAuth()
 
-  // Apply theme to document root and persist choice
+  const cachedRole = localStorage.getItem(ROLE_KEY)
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem(THEME_KEY, theme)
@@ -32,6 +52,14 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
   }
 
   const navClass = ({ isActive }) => `nav-item${isActive ? ' active' : ''}`
+
+  const menuItems = [
+    { to: '/inventory', label: 'Inventory', icon: <><path d="M21 8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></> },
+    { to: '/vehicle', label: 'Vehicle', icon: <><path d="M5 17h14M5 17a2 2 0 01-2-2V9a2 2 0 012-2h1l2-3h8l2 3h1a2 2 0 012 2v6a2 2 0 01-2 2M5 17a2 2 0 100 4 2 2 0 000-4zM19 17a2 2 0 100 4 2 2 0 000-4z"/></> },
+    { to: '/billing', label: 'Billing', icon: <><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></> },
+    { to: '/notification', label: 'Notification', icon: <><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></> },
+    { to: '/history', label: 'History', icon: <><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></> },
+  ]
 
   return (
     <>
@@ -80,73 +108,46 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
         <nav className="sidebar-nav">
           <div className="sidebar-card-group menu-card">
             <div className="menu-card-items">
-              {isAuthenticated && staffProfile && (
-                <>
-                  <div className="sidebar-label">MENU</div>
-                  <div className="sidebar-divider"></div>
-                  {/* Regular menu items visible to all authenticated staff */}
-                  <NavLink to="/inventory" className={navClass}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-                      <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/>
-                    </svg>
-                    <span>Inventory</span>
-                  </NavLink>
-                  <NavLink to="/vehicle" className={navClass}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 17h14M5 17a2 2 0 01-2-2V9a2 2 0 012-2h1l2-3h8l2 3h1a2 2 0 012 2v6a2 2 0 01-2 2M5 17a2 2 0 100 4 2 2 0 000-4zM19 17a2 2 0 100 4 2 2 0 000-4z"/>
-                    </svg>
-                    <span>Vehicle</span>
-                  </NavLink>
-                  <NavLink to="/billing" className={navClass}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="1" y="4" width="22" height="16" rx="2"/>
-                      <path d="M1 10h22"/>
-                    </svg>
-                    <span>Billing</span>
-                  </NavLink>
-                  <NavLink to="/notification" className={navClass}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                      <path d="M13.73 21a2 2 0 01-3.46 0"/>
-                    </svg>
-                    <span>Notification</span>
-                  </NavLink>
-                  <NavLink to="/history" className={navClass}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10"/>
-                      <path d="M12 6v6l4 2"/>
-                    </svg>
-                    <span>History</span>
-                  </NavLink>
-                  {/* ! Manager+ only: Reports */}
-                  {hasMinRole('manager') && (
-                    <NavLink to="/reports" className={navClass}>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 20V10M12 20V4M6 20v-6"/>
-                      </svg>
-                      <span>Reports</span>
-                    </NavLink>
-                  )}
-                  {/* ! Admin only: Members management */}
-                  {hasMinRole('admin') && (
-                    <NavLink to="/members" className={navClass}>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 010 7.75"/>
-                      </svg>
-                      <span>Members</span>
-                    </NavLink>
-                  )}
-                </>
+              {                loading && cachedRole ? (
+                <SidebarSkeleton collapsed={collapsed} role={cachedRole} />
+              ) : (
+                isAuthenticated && staffProfile && (
+                  <>
+                    <div className="sidebar-label">MENU</div>
+                    <div className="sidebar-divider"></div>
+                    {menuItems.map(({ to, label, icon }) => (
+                      <NavLink key={to} to={to} className={navClass}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          {icon}
+                        </svg>
+                        <span>{label}</span>
+                      </NavLink>
+                    ))}
+                    {hasMinRole('manager') && (
+                      <NavLink to="/reports" className={navClass}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M18 20V10M12 20V4M6 20v-6"/>
+                        </svg>
+                        <span>Reports</span>
+                      </NavLink>
+                    )}
+                    {hasMinRole('admin') && (
+                      <NavLink to="/members" className={navClass}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                          <circle cx="9" cy="7" r="4"/>
+                          <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                          <path d="M16 3.13a4 4 0 010 7.75"/>
+                        </svg>
+                        <span>Members</span>
+                      </NavLink>
+                    )}
+                  </>
+                )
               )}
             </div>
             <div className="menu-card-bottom">
               <div className="sidebar-divider"></div>
-              {/* ! Collapse button behaves differently on mobile vs desktop:
-                  ! On mobile it closes the slide-out menu; on desktop it collapses the sidebar. */}
               <button className="collapse-toggle" title="Collapse sidebar" onClick={() => {
                 if (window.innerWidth <= 768) {
                   onCloseMobile()
@@ -173,37 +174,43 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
           </div>
 
           <div className="sidebar-card-group profile-card">
-            {isAuthenticated ? (
-              <NavLink to="/account" className={({ isActive }) => `nav-item profile-item${isActive ? ' active' : ''}`}>
-                <div className="profile-avatar">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="8" r="4"/>
-                    <path d="M4 21v-1a6 6 0 0112 0v1"/>
-                  </svg>
-                </div>
-                <div className="profile-info">
-                    <span className="profile-name">{staffProfile?.displayName ? staffProfile.displayName.charAt(0).toUpperCase() + staffProfile.displayName.slice(1) : 'Staff'}</span>
-                </div>
-              </NavLink>
+            {loading && cachedRole ? (
+              <div className="sidebar-skeleton-item" style={{ margin: '0 4px', padding: '8px 12px' }}>
+                <div className="skeleton skeleton-icon" />
+                {!collapsed && <div className="skeleton skeleton-text" style={{ width: '50%' }} />}
+              </div>
             ) : (
-              <button className="nav-item profile-item login-btn" onClick={handleLoginClick}>
-                <div className="profile-avatar">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0110 0v4"/>
-                  </svg>
-                </div>
-                <div className="profile-info">
-                  <span className="profile-name">Staff Login</span>
-                </div>
-              </button>
+              isAuthenticated ? (
+                <NavLink to="/account" className={({ isActive }) => `nav-item profile-item${isActive ? ' active' : ''}`}>
+                  <div className="profile-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="8" r="4"/>
+                      <path d="M4 21v-1a6 6 0 0112 0v1"/>
+                    </svg>
+                  </div>
+                  <div className="profile-info">
+                      <span className="profile-name">{staffProfile?.displayName ? staffProfile.displayName.charAt(0).toUpperCase() + staffProfile.displayName.slice(1) : 'Staff'}</span>
+                  </div>
+                </NavLink>
+              ) : (
+                <button className="nav-item profile-item login-btn" onClick={handleLoginClick}>
+                  <div className="profile-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                      <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
+                  </div>
+                  <div className="profile-info">
+                    <span className="profile-name">Staff Login</span>
+                  </div>
+                </button>
+              )
             )}
           </div>
         </nav>
 
       </aside>
 
-      {/* Backdrop overlay — clicking it closes the mobile sidebar */}
       {mobileOpen && <div className="sidebar-overlay show" onClick={onCloseMobile}></div>}
 
       <LoginModal isOpen={loginModalOpen} onClose={handleLoginClose} />

@@ -15,14 +15,14 @@ export const useAuth = () => {
   return context
 }
 
+const ROLE_KEY = 'autotrack_role'
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [staffProfile, setStaffProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [authError, setAuthError] = useState(null)
 
-  // ! Listen for Firebase auth state changes. On login, fetch the staff
-  // ! profile from Firestore. On logout, clear both user and profile.
   useEffect(() => {
     const unsubscribe = onAuthStateChange(async (firebaseUser) => {
       if (firebaseUser) {
@@ -30,11 +30,13 @@ export const AuthProvider = ({ children }) => {
 
         if (data) {
           setStaffProfile(data)
+          localStorage.setItem(ROLE_KEY, data.role)
         } else {
           setStaffProfile(null)
         }
       } else {
         setStaffProfile(null)
+        localStorage.removeItem(ROLE_KEY)
       }
 
       setUser(firebaseUser)
